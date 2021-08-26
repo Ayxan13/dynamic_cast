@@ -1,4 +1,4 @@
-import 'package:dynamic_cast/gui/theme.dart';
+import 'package:dynamic_cast/gui/custom_theme.dart';
 import 'package:dynamic_cast/i18n/translation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +67,6 @@ class _SignInOrUpBody extends StatelessWidget {
           Spacer(),
           Container(
             margin: const EdgeInsets.all(15),
-            // width: MediaQuery.of(context).size.width,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [

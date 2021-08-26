@@ -1,3 +1,4 @@
+import 'package:dynamic_cast/gui/custom_theme.dart';
 import 'package:dynamic_cast/gui/screens/sign_in/sign_in_or_up.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class TheApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: customTheme.primarySwatch,
       ),
       home: SignInOrUpScreen(),
     );
