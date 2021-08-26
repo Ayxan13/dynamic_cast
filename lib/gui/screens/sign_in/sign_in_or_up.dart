@@ -40,19 +40,23 @@ class _SignInOrUpBody extends StatelessWidget {
             child: Center(
               child: Column(
                 children: [
-                  Text(
-                    str.signInOrUp,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 23,
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Text(
+                      str.signInOrUp,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: 23,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   Text(
                     str.signUpBenefits,
                     style: TextStyle(
+                      fontWeight: FontWeight.w700,
                       color: customTheme.backInfoTextClr,
-                      fontSize: 16,
+                      fontSize: 15,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -68,6 +72,9 @@ class _SignInOrUpBody extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(20),
+                  ),
                   onPressed: () => {/* TODO: Implement */},
                   child: Text(str.signUp),
                 ),
