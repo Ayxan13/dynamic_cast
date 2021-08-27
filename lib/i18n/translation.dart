@@ -1,3 +1,5 @@
+import 'package:dynamic_cast/constants.dart';
+
 Translation _translation = new _EngTranslation();
 
 enum Lang {
@@ -31,6 +33,11 @@ abstract class Translation {
   String get signUp;
   String get signIn;
   String get signUpBenefits;
+  String get email;
+  String get password;
+  String get passwordHasMinSize;
+  String get next;
+  String get enterEmail;
 }
 
 class _EngTranslation implements Translation {
@@ -55,6 +62,22 @@ class _EngTranslation implements Translation {
   @override
   String get signUpBenefits => "Save the podcasts you like "
       "and sync across all your devices.";
+
+  @override
+  String get email => "Email";
+
+  @override
+  String get password => "Password";
+
+  @override
+  String get passwordHasMinSize =>
+      "Must be at least $PASSWORD_MIN_LENGTH characters.";
+
+  @override
+  String get next => "Next";
+
+  @override
+  String get enterEmail => "Please enter your email";
 }
 
 class _AzeTranslation implements Translation {
@@ -79,4 +102,20 @@ class _AzeTranslation implements Translation {
   @override
   String get signUpBenefits => "Bəyəndiyin podkastları topla və "
       "bütün cihazların arasında sinxronizasiya et.";
+
+  @override
+  String get email => "E-poçt";
+
+  @override
+  String get password => "Parol";
+
+  @override
+  String get passwordHasMinSize =>
+      "Ən azı $PASSWORD_MIN_LENGTH hərf olmalıdır.";
+
+  @override
+  String get next => "Növbəti";
+
+  @override
+  String get enterEmail => "E-poçtunuzu daxil edin.";
 }
