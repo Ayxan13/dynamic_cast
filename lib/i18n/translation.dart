@@ -38,9 +38,12 @@ abstract class Translation {
   String get passwordHasMinSize;
   String get next;
   String get enterEmail;
+  String get emailFormatWrong;
+  String get emailHint => "someone@example.com";
+  String get forgotPassword;
 }
 
-class _EngTranslation implements Translation {
+class _EngTranslation extends Translation {
   @override
   Lang get metaLanguage => Lang.Eng;
 
@@ -77,10 +80,16 @@ class _EngTranslation implements Translation {
   String get next => "Next";
 
   @override
-  String get enterEmail => "Please enter your email";
+  String get enterEmail => "Please enter your email.";
+
+  @override
+  String get emailFormatWrong => "Email format is wrong.";
+
+  @override
+  String get forgotPassword => "I forgot my password";
 }
 
-class _AzeTranslation implements Translation {
+class _AzeTranslation extends Translation {
   @override
   Lang get metaLanguage => Lang.Aze;
 
@@ -118,4 +127,10 @@ class _AzeTranslation implements Translation {
 
   @override
   String get enterEmail => "E-poçtunuzu daxil edin.";
+
+  @override
+  String get emailFormatWrong => "E-poçt formatı düzgün deyil.";
+
+  @override
+  String get forgotPassword => "Parolumu unutdum.";
 }

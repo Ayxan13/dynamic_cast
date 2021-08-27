@@ -1,6 +1,6 @@
 import 'package:dynamic_cast/constants.dart';
 import 'package:dynamic_cast/gui/custom_theme.dart';
-import 'package:dynamic_cast/gui/screens/sign_in/sign_up.dart';
+import 'package:dynamic_cast/gui/screens/sign_in/credential_screen.dart';
 import 'package:dynamic_cast/i18n/translation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +17,11 @@ class _SignInOrUpBody extends StatelessWidget {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.3,
       width: MediaQuery.of(context).size.width * 0.7,
-      child: Expanded(
-        child: FittedBox(
-          fit: BoxFit.contain,
-          child: Icon(
-            Icons.add_reaction_sharp,
-            color: Theme.of(context).primaryColor,
-          ),
+      child: FittedBox(
+        fit: BoxFit.contain,
+        child: Icon(
+          Icons.add_reaction_sharp,
+          color: Theme.of(context).primaryColor,
         ),
       ),
     );
@@ -69,7 +67,7 @@ class _SignInOrUpBody extends StatelessWidget {
       onPressed: () => {
         Navigator.of(context).push(
           MaterialPageRoute(builder: (final context) {
-            return SignUpScreen();
+            return CredentialScreen(SignType.SignUp);
           }),
         ),
       },
@@ -77,9 +75,15 @@ class _SignInOrUpBody extends StatelessWidget {
     );
   }
 
-  Widget _signInButton() {
+  Widget _signInButton(BuildContext context) {
     return TextButton(
-      onPressed: () => {/* TODO: Implement */},
+      onPressed: () => {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (final context) {
+            return CredentialScreen(SignType.SignIn);
+          }),
+        ),
+      },
       child: Text(str.signIn),
     );
   }
@@ -87,20 +91,20 @@ class _SignInOrUpBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        children: [
-          Spacer(),
-          _accountLogo(context),
-          _accountLogoCaption(),
-          Spacer(),
-          Container(
-            margin: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [_signUpButton(context), _signInButton()],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            _accountLogo(context),
+            _accountLogoCaption(),
+            Container(
+              margin: const EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [_signUpButton(context), _signInButton(context)],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
