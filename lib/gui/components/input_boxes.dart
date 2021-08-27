@@ -28,6 +28,8 @@ TextFormField makeEmailInput(BuildContext context) {
       labelText: str.email,
       focusedBorder: _textInputOutline(theme.accentColor, true),
       enabledBorder: _textInputOutline(theme.disabledColor, false),
+      focusedErrorBorder: _textInputOutline(theme.errorColor, true),
+      errorBorder: _textInputOutline(theme.errorColor, false),
       prefixIcon: Icon(Icons.email_outlined),
     ),
   );
@@ -69,6 +71,8 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           labelText: str.password,
           focusedBorder: _textInputOutline(theme.accentColor, true),
           enabledBorder: _textInputOutline(theme.disabledColor, false),
+          focusedErrorBorder: _textInputOutline(theme.errorColor, true),
+          errorBorder: _textInputOutline(theme.errorColor, false),
           prefixIcon: Icon(Icons.password_outlined),
           suffixIcon: GestureDetector(
             child: Icon(
