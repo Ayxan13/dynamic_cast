@@ -27,4 +27,4 @@ class _LightTheme implements CusomTheme {
   Color get primaryClr => Colors.blue.shade500;
 }
 
-CusomTheme _theme = new _LightTheme();
+CusomTheme _theme = _LightTheme();

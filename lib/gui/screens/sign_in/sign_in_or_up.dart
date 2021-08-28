@@ -86,15 +86,6 @@ class _SignInOrUpBody extends StatelessWidget {
     );
   }
 
-  Widget _skipSignInButton(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        // TODO: implement
-      },
-      child: Text(str.skip),
-    );
-  }
-
   Widget _signInButton(BuildContext context) {
     return TextButton(
       onPressed: () => {
@@ -120,10 +111,7 @@ class _SignInOrUpBody extends StatelessWidget {
               margin: const EdgeInsets.all(15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _signUpButton(context),
-                  _signInButton(context),
-                ],
+                children: [_signUpButton(context), _signInButton(context)],
               ),
             ),
           ],

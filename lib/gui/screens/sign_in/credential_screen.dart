@@ -57,9 +57,7 @@ class _State extends State<CredentialScreen> {
                       padding: const EdgeInsets.all(LARGE_BUTTON_PADDING),
                     ),
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        /* TODO: Implement */
-                      }
+                      if (_formKey.currentState!.validate()) {}
                     },
                     child: Text(str.next),
                   ),
