@@ -14,8 +14,11 @@ late FirebaseAnalytics firebaseAnalytics;
 void main() {
   firebaseAnalytics = FirebaseAnalytics();
 
-  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  try {
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  } catch (error) {
+    print(error);
+  }
 
   runApp(TheApp());
 }
@@ -31,12 +34,7 @@ class TheApp extends StatelessWidget {
         primaryColor: customTheme.primaryClr,
         primarySwatch: customTheme.primarySwatch,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(str.appName),
-        ),
-        body: SignInOrUpScreen(),
-      ),
+      home: SignInOrUpScreen(),
     );
   }
 }

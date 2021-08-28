@@ -41,96 +41,57 @@ abstract class Translation {
   String get emailFormatWrong;
   String get emailHint => "someone@example.com";
   String get forgotPassword;
+  String get userNotFound;
+  String get somethingWentWrong;
+  String get passwordTooWeak;
+  String get emailAlreadyInUse;
+  String get skip;
 }
 
 class _EngTranslation extends Translation {
-  @override
   Lang get metaLanguage => Lang.Eng;
-
-  @override
   String get metaCurrentLanguageName => "English";
-
-  @override
   String get appName => "Dynamic Cast";
-
-  @override
   String get signInOrUp => "Sign in or create an account";
-
-  @override
   String get signUp => "Sign up";
-
-  @override
   String get signIn => "Sign in";
-
-  @override
   String get signUpBenefits => "Save the podcasts you like "
       "and sync across all your devices.";
-
-  @override
   String get email => "Email";
-
-  @override
   String get password => "Password";
-
-  @override
   String get passwordHasMinSize =>
       "Must be at least $PASSWORD_MIN_LENGTH characters.";
-
-  @override
   String get next => "Next";
-
-  @override
   String get enterEmail => "Please enter your email.";
-
-  @override
   String get emailFormatWrong => "Email format is wrong.";
-
-  @override
   String get forgotPassword => "I forgot my password";
+  String get userNotFound => "Username or password wrong";
+  String get somethingWentWrong => "Something went wrong!";
+  String get passwordTooWeak => "Password is too weak.";
+  String get emailAlreadyInUse => "Email is already in use.";
+  String get skip => "Skip";
 }
 
 class _AzeTranslation extends Translation {
-  @override
   Lang get metaLanguage => Lang.Aze;
-
-  @override
   String get metaCurrentLanguageName => "Azərbaycanca";
-
-  @override
   String get appName => "Dinamik Kast";
-
-  @override
   String get signInOrUp => "Daxil ol və ya hesab yarat";
-
-  @override
   String get signUp => "Hesab yarat";
-
-  @override
   String get signIn => "Daxil ol";
-
-  @override
   String get signUpBenefits => "Bəyəndiyin podkastları topla və "
       "bütün cihazların arasında sinxronizasiya et.";
-
-  @override
   String get email => "E-poçt";
-
-  @override
   String get password => "Parol";
-
-  @override
   String get passwordHasMinSize =>
       "Ən azı $PASSWORD_MIN_LENGTH hərf olmalıdır.";
-
-  @override
   String get next => "Növbəti";
-
-  @override
   String get enterEmail => "E-poçtunuzu daxil edin.";
-
-  @override
   String get emailFormatWrong => "E-poçt formatı düzgün deyil.";
-
-  @override
   String get forgotPassword => "Parolumu unutdum.";
+  String get userNotFound => "İstifadəçi adı və ya parol yanlışdır.";
+  String get somethingWentWrong => "Xəta baş verdi!";
+  String get passwordTooWeak => "Parol çox zəifdir.";
+  String get emailAlreadyInUse => "E-poçt artıq istifadə olunub.";
+  String get skip => "Keç";
 }
