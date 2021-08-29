@@ -46,6 +46,10 @@ abstract class Translation {
   String get passwordTooWeak;
   String get emailAlreadyInUse;
   String get skip;
+  String get podcasts;
+  String get filters;
+  String get discover;
+  String get profile;
 }
 
 class _EngTranslation extends Translation {
@@ -70,6 +74,10 @@ class _EngTranslation extends Translation {
   String get passwordTooWeak => "Password is too weak.";
   String get emailAlreadyInUse => "Email is already in use.";
   String get skip => "Skip";
+  String get podcasts => "Podcasts";
+  String get filters => "Filters";
+  String get discover => "Discover";
+  String get profile => "Profile";
 }
 
 class _AzeTranslation extends Translation {
@@ -94,4 +102,8 @@ class _AzeTranslation extends Translation {
   String get passwordTooWeak => "Parol çox zəifdir.";
   String get emailAlreadyInUse => "E-poçt artıq istifadə olunub.";
   String get skip => "Keç";
+  String get podcasts => "Podkastlar";
+  String get filters => "Filterlər";
+  String get discover => "Kəşf et";
+  String get profile => "Profil";
 }
