@@ -1,5 +1,5 @@
+import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-
 
 // flutter pub run build_runner build
 part 'itunes_podcast.g.dart';
@@ -8,6 +8,7 @@ part 'itunes_podcast.g.dart';
 class ItunesPodcast {
   String collectionName;
   String feedUrl;
+  Image? image;
   String? artistName;
   String? artworkUrl30;
   String? artworkUrl60;

@@ -1,5 +1,6 @@
 import 'package:dynamic_cast/data/itunes_podcast.dart';
 import 'package:dynamic_cast/model/model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class PodcastSearchDelegate extends SearchDelegate<void> {
@@ -49,7 +50,7 @@ class SearchResults extends StatefulWidget {
 
 class _SearchResultsState extends State<StatefulWidget> {
   Future<List<ItunesPodcast>?> _reults;
-  List<ItunesPodcast>? _list;
+  final ObserverList<ItunesPodcast> _toFill = ObserverList();
 
   _SearchResultsState(String term) : _reults = Network.searchPodcast(term);
 
