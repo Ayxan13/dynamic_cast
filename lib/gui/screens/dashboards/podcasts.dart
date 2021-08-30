@@ -1,22 +1,22 @@
-import 'package:dynamic_cast/data/itunes_podcast.dart';
+import 'package:dynamic_cast/gui/components/podcast_search_bar.dart';
 import 'package:dynamic_cast/i18n/translation.dart';
-import 'package:dynamic_cast/mock/data_src.dart';
+import 'package:dynamic_cast/model/model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PodcastsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final likedPodcasts = MockData.getLibrary();
+    final likedPodcasts = podcastsModel.getLibrary();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(str.podcasts),
         actions: [
           IconButton(
-            onPressed: () {
-              // TODO: implement
-            },
+            onPressed: () =>
+                showSearch(context: context, delegate: PodcastSearchDelegate()),
             icon: Icon(Icons.search),
           ),
           IconButton(

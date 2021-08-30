@@ -1,5 +1,5 @@
 import 'package:dynamic_cast/gui/custom_theme.dart';
-import 'package:dynamic_cast/gui/screens/sign_in/dashboards/dashboard.dart';
+import 'package:dynamic_cast/gui/screens/dashboards/dashboard.dart';
 import 'package:dynamic_cast/gui/screens/sign_in/sign_in_or_up.dart';
 import 'package:dynamic_cast/i18n/translation.dart';
 import 'package:flutter/material.dart';

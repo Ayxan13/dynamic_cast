@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:dynamic_cast/data/itunes_podcast.dart';
+import 'package:http/http.dart';
 import 'package:webfeed/domain/itunes/itunes.dart';
 
-class MockData {
-  static List<ItunesPodcast> getLibrary() {
+abstract class PodcastsModel {
+  List<ItunesPodcast> getLibrary();
+}
+
+class MockData extends PodcastsModel {
+  List<ItunesPodcast> getLibrary() {
     return [
       ItunesPodcast(
           collectionName: "Hello Internet",
@@ -70,5 +77,36 @@ class MockData {
               "https://is3-ssl.mzstatic.com/image/thumb/Podcasts125/v4/5c/2f/0f/5c2f0f37-d20b-ffd9-d987-4c9cb9c30bfb/mza_13553072883718784286.jpg/600x600bb.jpg",
           primaryGenreName: "Technology")
     ];
+  }
+}
+
+final podcastsModel = MockData();
+
+class Network {
+  static Future<List<ItunesPodcast>?> searchPodcast(final String term) async {
+    final params = {
+      'media': 'podcast',
+      'term': term,
+    };
+
+    final uri = Uri.https('itunes.apple.com', '/search', params);
+    final response = await get(uri);
+
+    if (response.statusCode != 200) return null;
+
+    final json = jsonDecode(response.body);
+    final podcasts = <ItunesPodcast>[];
+
+    for (final podJson in json['results']) {
+      try {
+        podcasts.add(ItunesPodcast.fromJson(podJson));
+      } catch (error) {
+        // ... skip ...
+      }
+    }
+
+    if (podcasts.isEmpty) return null;
+
+    return podcasts;
   }
 }

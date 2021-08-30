@@ -12,10 +12,9 @@ class SignInOrUpScreen extends StatelessWidget {
       appBar: AppBar(
         actions: [
           IconButton(
-              onPressed: () {
-                // TODO: Implement skip
-              },
-              icon: Icon(Icons.close))
+            onPressed: () {},
+            icon: Icon(Icons.close),
+          )
         ],
       ),
       body: _SignInOrUpBody(),

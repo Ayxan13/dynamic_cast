@@ -50,6 +50,7 @@ abstract class Translation {
   String get filters;
   String get discover;
   String get profile;
+  String get searchPodcasts;
 }
 
 class _EngTranslation extends Translation {
@@ -59,8 +60,8 @@ class _EngTranslation extends Translation {
   String get signInOrUp => "Sign in or create an account";
   String get signUp => "Sign up";
   String get signIn => "Sign in";
-  String get signUpBenefits => "Save the podcasts you like "
-      "and sync across all your devices.";
+  String get signUpBenefits =>
+      "Save the podcasts you like and sync across all your devices.";
   String get email => "Email";
   String get password => "Password";
   String get passwordHasMinSize =>
@@ -78,6 +79,7 @@ class _EngTranslation extends Translation {
   String get filters => "Filters";
   String get discover => "Discover";
   String get profile => "Profile";
+  String get searchPodcasts => "Search Podcasts";
 }
 
 class _AzeTranslation extends Translation {
@@ -87,8 +89,8 @@ class _AzeTranslation extends Translation {
   String get signInOrUp => "Daxil ol və ya hesab yarat";
   String get signUp => "Hesab yarat";
   String get signIn => "Daxil ol";
-  String get signUpBenefits => "Bəyəndiyin podkastları topla və "
-      "bütün cihazların arasında sinxronizasiya et.";
+  String get signUpBenefits =>
+      "Bəyəndiyin podkastları topla və bütün cihazların arasında sinxronizasiya et.";
   String get email => "E-poçt";
   String get password => "Parol";
   String get passwordHasMinSize =>
@@ -106,4 +108,5 @@ class _AzeTranslation extends Translation {
   String get filters => "Filterlər";
   String get discover => "Kəşf et";
   String get profile => "Profil";
+  String get searchPodcasts => "Podkast Axtar";
 }

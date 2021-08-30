@@ -43,6 +43,8 @@ dependencies:
   json_serializable: ^4.0.2
   build_runner: ^1.11.5
   webfeed: ^0.7.0
+  material_floating_search_bar: ^0.3.4
+  http: ^0.13.3
   
 flutter_launcher_name:
   name: "Dynamic Cast"

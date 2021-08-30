@@ -1,5 +1,5 @@
 import 'package:dynamic_cast/gui/custom_theme.dart';
-import 'package:dynamic_cast/gui/screens/sign_in/dashboards/podcasts.dart';
+import 'package:dynamic_cast/gui/screens/dashboards/podcasts.dart';
 import 'package:dynamic_cast/i18n/translation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
