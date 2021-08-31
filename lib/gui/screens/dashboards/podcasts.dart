@@ -33,9 +33,10 @@ class PodcastsScreen extends StatelessWidget {
           final toPodcast = () => Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => PodcastFeed(item)));
 
-          return GestureDetector(
-            onTap: toPodcast,
-            child: item.loadArtWork(context),
+          return IconButton(
+            onPressed: toPodcast,
+            padding: const EdgeInsets.all(0.0),
+            icon: item.loadArtWork(context, widthProportion: 1),
           );
         }),
       ),

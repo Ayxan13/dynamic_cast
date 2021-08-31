@@ -54,7 +54,8 @@ class _State extends State<StatefulWidget> {
                     subtitle: element.artistName != null
                         ? Text(element.artistName!)
                         : null,
-                    leading: element.loadArtWork(context),
+                    leading:
+                        element.loadArtWork(context, widthProportion: 0.15),
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => PodcastFeed(element))));
               },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:webfeed/webfeed.dart';
 
 // flutter pub run build_runner build
 part 'itunes_podcast.g.dart';
@@ -28,7 +29,8 @@ class ItunesPodcast {
     this.primaryGenreName,
   });
 
-  Widget loadArtWork(final BuildContext context) {
+  Widget loadArtWork(final BuildContext context,
+      {required double widthProportion}) {
     const defaultIcon = Icon(Icons.podcasts);
 
     final String? url =
@@ -36,7 +38,7 @@ class ItunesPodcast {
 
     if (url == null) return Center(child: defaultIcon);
 
-    final sideLength = MediaQuery.of(context).size.width * 0.15;
+    final sideLength = MediaQuery.of(context).size.width * widthProportion;
 
     return Container(
       width: sideLength,
