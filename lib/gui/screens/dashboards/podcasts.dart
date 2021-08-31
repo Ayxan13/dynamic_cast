@@ -1,4 +1,5 @@
 import 'package:dynamic_cast/gui/components/search/podcast_search_bar.dart';
+import 'package:dynamic_cast/gui/screens/podcast_view/feed.dart';
 import 'package:dynamic_cast/i18n/translation.dart';
 import 'package:dynamic_cast/model/model.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,10 +30,13 @@ class PodcastsScreen extends StatelessWidget {
         crossAxisCount: 4,
         children: List.generate(likedPodcasts.length, (index) {
           final item = likedPodcasts[index];
-          if (item.artworkUrl100 != null)
-            return Image.network(item.artworkUrl100!);
-          else
-            return Icon(Icons.not_interested);
+          final toPodcast = () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => PodcastFeed(item)));
+
+          return GestureDetector(
+            onTap: toPodcast,
+            child: item.loadArtWork(context),
+          );
         }),
       ),
     );

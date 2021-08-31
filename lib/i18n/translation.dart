@@ -1,4 +1,5 @@
 import 'package:dynamic_cast/constants.dart';
+import 'package:intl/intl.dart';
 
 Translation _translation = new _EngTranslation();
 
@@ -52,6 +53,9 @@ abstract class Translation {
   String get profile;
   String get searchPodcasts;
   String get notFound;
+  String get connectionError;
+  String formatDuration(Duration duration);
+  String formatDate(DateTime dateTime);
 }
 
 class _EngTranslation extends Translation {
@@ -82,6 +86,13 @@ class _EngTranslation extends Translation {
   String get profile => "Profile";
   String get searchPodcasts => "Search Podcasts";
   String get notFound => "Not found";
+  String get connectionError => "Connection error";
+  String formatDuration(Duration duration) {
+    if (duration.inHours == 0) return "${duration.inMinutes.remainder(60)}m";
+    return "${duration.inHours}h ${duration.inMinutes.remainder(60)}m";
+  }
+
+  String formatDate(DateTime dateTime) => DateFormat.yMd().format(dateTime);
 }
 
 class _AzeTranslation extends Translation {
@@ -112,4 +123,11 @@ class _AzeTranslation extends Translation {
   String get profile => "Profil";
   String get searchPodcasts => "Podkast Axtar";
   String get notFound => "Tapılmadı";
+  String get connectionError => "Bağlantı problemi";
+  String formatDuration(Duration duration) {
+    if (duration.inHours == 0) return "${duration.inMinutes.remainder(60)}d";
+    return "${duration.inHours}s ${duration.inMinutes.remainder(60)}d";
+  }
+
+  String formatDate(DateTime dateTime) => DateFormat.yMd().format(dateTime);
 }

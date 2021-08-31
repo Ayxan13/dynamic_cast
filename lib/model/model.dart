@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dynamic_cast/data/itunes_podcast.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 
 abstract class PodcastsModel {
   List<ItunesPodcast> getLibrary();
@@ -81,7 +81,17 @@ class MockData extends PodcastsModel {
 
 final podcastsModel = MockData();
 
-class Network {
+abstract class Network {
+  static const HttpOk = 200;
+
+  static Future<String> loadFeed(ItunesPodcast podcast) async {
+    final response = await http.get(Uri.parse(podcast.feedUrl));
+    if (response.statusCode != HttpOk)
+      return Future.error("Failed to load the feed");
+
+    return response.body;
+  }
+
   static Future<List<ItunesPodcast>?> searchPodcast(final String term) async {
     final params = {
       'media': 'podcast',
@@ -89,9 +99,9 @@ class Network {
     };
 
     final uri = Uri.https('itunes.apple.com', '/search', params);
-    final response = await get(uri);
+    final response = await http.get(uri);
 
-    if (response.statusCode != 200) return null;
+    if (response.statusCode != HttpOk) return null;
 
     final json = jsonDecode(response.body);
     final podcasts = <ItunesPodcast>[];

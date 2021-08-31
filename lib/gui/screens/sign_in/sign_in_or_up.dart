@@ -76,9 +76,9 @@ class _SignInOrUpBody extends StatelessWidget {
       ),
       onPressed: () => {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (final context) {
-            return CredentialScreen(SignType.SignUp);
-          }),
+          MaterialPageRoute(
+            builder: (context) => CredentialScreen(SignType.SignUp),
+          ),
         ),
       },
       child: Text(str.signUp),
@@ -89,9 +89,9 @@ class _SignInOrUpBody extends StatelessWidget {
     return TextButton(
       onPressed: () => {
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (final context) {
-            return CredentialScreen(SignType.SignIn);
-          }),
+          MaterialPageRoute(
+            builder: (context) => CredentialScreen(SignType.SignIn),
+          ),
         ),
       },
       child: Text(str.signIn),

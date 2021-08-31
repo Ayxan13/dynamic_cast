@@ -1,5 +1,6 @@
 import 'package:dynamic_cast/data/itunes_podcast.dart';
 import 'package:dynamic_cast/gui/components/search/search_result.dart';
+import 'package:dynamic_cast/gui/screens/podcast_view/feed.dart';
 import 'package:dynamic_cast/model/model.dart';
 import 'package:flutter/material.dart';
 
@@ -48,6 +49,11 @@ class PodcastSearchDelegate extends SearchDelegate<void> {
             (index) => ListTile(
               title: Text(data[index].collectionName),
               leading: Icon(Icons.search),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => PodcastFeed(data[index]),
+                ),
+              ),
             ),
           ),
         );

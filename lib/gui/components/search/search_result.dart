@@ -1,4 +1,5 @@
 import 'package:dynamic_cast/data/itunes_podcast.dart';
+import 'package:dynamic_cast/gui/screens/podcast_view/feed.dart';
 import 'package:dynamic_cast/i18n/translation.dart';
 import 'package:dynamic_cast/model/model.dart';
 import 'package:flutter/material.dart';
@@ -17,30 +18,6 @@ class _State extends State<StatefulWidget> {
   Future<List<ItunesPodcast>?> _podcastsList;
 
   _State(String term) : _podcastsList = Network.searchPodcast(term);
-
-  static Widget _loadArtWork(
-      final BuildContext context, final ItunesPodcast podcast) {
-    const defaultIcon = Icon(Icons.podcasts);
-
-    final String? url = podcast.artworkUrl600 ??
-        podcast.artworkUrl100 ??
-        podcast.artworkUrl60 ??
-        podcast.artworkUrl30;
-
-    if (url == null) return Center(child: defaultIcon);
-
-    final sideLength = MediaQuery.of(context).size.width * 0.15;
-
-    return Container(
-      width: sideLength,
-      height: sideLength,
-      child: FadeInImage.memoryNetwork(
-        placeholder: kTransparentImage,
-        image: url,
-        fit: BoxFit.fill,
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,16 +45,20 @@ class _State extends State<StatefulWidget> {
 
         return SingleChildScrollView(
           child: Column(
-            children: List.generate(list.length, (index) {
-              final element = list[index];
-              return ListTile(
-                title: Text(element.collectionName),
-                subtitle: element.artistName != null
-                    ? Text(element.artistName!)
-                    : null,
-                leading: _loadArtWork(context, element),
-              );
-            }),
+            children: List.generate(
+              list.length,
+              (index) {
+                final element = list[index];
+                return ListTile(
+                    title: Text(element.collectionName),
+                    subtitle: element.artistName != null
+                        ? Text(element.artistName!)
+                        : null,
+                    leading: element.loadArtWork(context),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => PodcastFeed(element))));
+              },
+            ),
           ),
         );
       },
