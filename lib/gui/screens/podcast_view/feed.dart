@@ -31,17 +31,37 @@ class _State extends State<PodcastFeed> {
             return Center(child: Text(str.connectionError));
 
           final data = RssFeed.parse(snapshot.data as String);
-          final items = data.items!;
+          final items = data.items;
 
-          return ListView.separated(
-            itemCount: items.length,
-            itemBuilder: (context, index) => _PodcastEpisode(items[index]),
-            separatorBuilder: (context, index) => Divider(),
+          if (items == null) return Center(child: Text(str.noEpisodes));
+
+          return ListView.builder(
+            physics: const ScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: items.length + 1,
+            itemBuilder: (context, index) {
+              switch (index) {
+                case 0:
+                  return ListTile(
+                    title: Text(
+                      '${str.formatNEpisodes(items.length)} Episodes',
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.reorder),
+                      onPressed: () {/* TODO */},
+                    ),
+                  );
+                default:
+                  return _PodcastEpisode(items[index - 1]);
+              }
+            },
           );
         });
   }
 
-  Widget _body(final BuildContext context) {
+  Widget _infoHeader(final BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final theme = Theme.of(context);
 
@@ -58,24 +78,25 @@ class _State extends State<PodcastFeed> {
               color: theme.accentColor,
             ),
             Container(
-              height: actionBarHeight,
-              color: theme.canvasColor,
-              child: Row(
-                children: [
-                  Spacer(),
-                  IconButton(
-                      onPressed: () {/* TODO */},
-                      icon: Icon(CupertinoIcons.bell_solid)),
-                  IconButton(
-                      onPressed: () {/* TODO */},
-                      icon: Icon(Icons.settings_outlined)),
-                  IconButton(
-                      onPressed: () {/* TODO */},
-                      icon: Icon(Icons.check_circle_outline)),
-                ],
-              ),
-            ),
-            Expanded(child: _episodesList()),
+                height: actionBarHeight,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Spacer(),
+                        IconButton(
+                            onPressed: () {/* TODO */},
+                            icon: Icon(CupertinoIcons.bell_solid)),
+                        IconButton(
+                            onPressed: () {/* TODO */},
+                            icon: Icon(Icons.settings_outlined)),
+                        IconButton(
+                            onPressed: () {/* TODO */},
+                            icon: Icon(Icons.check_circle_outline)),
+                      ],
+                    ),
+                  ],
+                )),
           ],
         ),
         Container(
@@ -84,6 +105,12 @@ class _State extends State<PodcastFeed> {
           child: _podcast.loadArtWork(context, widthProportion: 0.45),
         )
       ],
+    );
+  }
+
+  Widget _body(final BuildContext context) {
+    return ListView(
+      children: [_infoHeader(context), _episodesList()],
     );
   }
 

@@ -55,7 +55,8 @@ abstract class Translation {
   String get notFound;
   String get connectionError;
   String formatDuration(Duration duration);
-  String formatDate(DateTime dateTime);
+  String formatNEpisodes(int n);
+  String get noEpisodes;
 }
 
 class _EngTranslation extends Translation {
@@ -92,7 +93,8 @@ class _EngTranslation extends Translation {
     return "${duration.inHours}h ${duration.inMinutes.remainder(60)}m";
   }
 
-  String formatDate(DateTime dateTime) => DateFormat.yMd().format(dateTime);
+  String formatNEpisodes(int n) => "$n Episode${n > 0 ? 's' : ''}";
+  String get noEpisodes => "No Episodes";
 }
 
 class _AzeTranslation extends Translation {
@@ -129,5 +131,6 @@ class _AzeTranslation extends Translation {
     return "${duration.inHours}s ${duration.inMinutes.remainder(60)}d";
   }
 
-  String formatDate(DateTime dateTime) => DateFormat.yMd().format(dateTime);
+  String formatNEpisodes(int n) => "$n Epizod";
+  String get noEpisodes => "Epizod yoxdur";
 }
