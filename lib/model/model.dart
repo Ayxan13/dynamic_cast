@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:dynamic_cast/data/itunes_podcast.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
-import 'package:webfeed/domain/itunes/itunes.dart';
 
 abstract class PodcastsModel {
   List<ItunesPodcast> getLibrary();
@@ -84,17 +82,6 @@ class MockData extends PodcastsModel {
 final podcastsModel = MockData();
 
 class Network {
-  static void searchPodcastFill(
-      final String term, final ObserverList<ItunesPodcast> toFill) async {
-    final list = await searchPodcast(term);
-
-    toFill.clear();
-
-    if (list == null) return;
-
-    for (int i = 0; i != list.length; ++i) {}
-  }
-
   static Future<List<ItunesPodcast>?> searchPodcast(final String term) async {
     final params = {
       'media': 'podcast',

@@ -1,4 +1,4 @@
-import 'package:dynamic_cast/gui/components/podcast_search_bar.dart';
+import 'package:dynamic_cast/gui/components/search/podcast_search_bar.dart';
 import 'package:dynamic_cast/i18n/translation.dart';
 import 'package:dynamic_cast/model/model.dart';
 import 'package:flutter/cupertino.dart';

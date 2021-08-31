@@ -51,6 +51,7 @@ abstract class Translation {
   String get discover;
   String get profile;
   String get searchPodcasts;
+  String get notFound;
 }
 
 class _EngTranslation extends Translation {
@@ -80,6 +81,7 @@ class _EngTranslation extends Translation {
   String get discover => "Discover";
   String get profile => "Profile";
   String get searchPodcasts => "Search Podcasts";
+  String get notFound => "Not found";
 }
 
 class _AzeTranslation extends Translation {
@@ -109,4 +111,5 @@ class _AzeTranslation extends Translation {
   String get discover => "Kəşf et";
   String get profile => "Profil";
   String get searchPodcasts => "Podkast Axtar";
+  String get notFound => "Tapılmadı";
 }
