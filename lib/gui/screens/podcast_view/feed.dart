@@ -1,12 +1,14 @@
 import 'package:dynamic_cast/data/itunes_podcast.dart';
+import 'package:dynamic_cast/gui/screens/podcast_view/feed_episode_tile_play_button.dart';
 import 'package:dynamic_cast/i18n/translation.dart';
 import 'package:dynamic_cast/model/model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:webfeed/webfeed.dart';
 
 class PodcastFeed extends StatefulWidget {
-  ItunesPodcast _podcast;
+  final ItunesPodcast _podcast;
   PodcastFeed(this._podcast);
 
   @override
@@ -21,6 +23,7 @@ class _State extends State<PodcastFeed> {
 
   Widget _body(BuildContext context) {
     final page = Network.loadFeed(_podcast);
+    final theme = Theme.of(context);
     return FutureBuilder(
         future: page,
         builder: (context, snapshot) {
@@ -43,13 +46,20 @@ class _State extends State<PodcastFeed> {
           if (items == null) return Center(child: Text(str.noEpisodes));
 
           return ListView.builder(
-            itemCount: items.length + 1,
+            itemCount: items.length + 2,
             itemBuilder: (context, index) {
               switch (index) {
                 case 0:
                   return _infoHeader(context);
+
+                case 1:
+                  return Container(
+                    margin: const EdgeInsets.all(10),
+                    child: Text(str.formatNEpisodes(items.length),
+                        style: theme.textTheme.headline6),
+                  );
                 default:
-                  return _PodcastEpisode(items[index - 1]);
+                  return _PodcastEpisode(items[index - 2]);
               }
             },
           );
@@ -73,25 +83,26 @@ class _State extends State<PodcastFeed> {
               color: theme.accentColor,
             ),
             Container(
-                height: actionBarHeight,
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Spacer(),
-                        IconButton(
-                            onPressed: () {/* TODO */},
-                            icon: Icon(CupertinoIcons.bell_solid)),
-                        IconButton(
-                            onPressed: () {/* TODO */},
-                            icon: Icon(Icons.settings_outlined)),
-                        IconButton(
-                            onPressed: () {/* TODO */},
-                            icon: Icon(Icons.check_circle_outline)),
-                      ],
-                    ),
-                  ],
-                )),
+              // height: actionBarHeight,
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Spacer(),
+                      IconButton(
+                          onPressed: () {/* TODO */},
+                          icon: Icon(CupertinoIcons.bell_solid)),
+                      IconButton(
+                          onPressed: () {/* TODO */},
+                          icon: Icon(Icons.settings_outlined)),
+                      IconButton(
+                          onPressed: () {/* TODO */},
+                          icon: Icon(Icons.check_circle_outline)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
         Container(
@@ -119,19 +130,48 @@ class _State extends State<PodcastFeed> {
 class _PodcastEpisode extends StatelessWidget {
   final RssItem _item;
 
+  Widget _actions(BuildContext context) {
+    return Row(
+      children: [
+        EpisodeTilePlayButton(_item),
+        IconButton(onPressed: () {/* TODO */}, icon: Icon(Icons.playlist_add)),
+        IconButton(
+            onPressed: () {/* TODO */}, icon: Icon(Icons.download_rounded)),
+      ],
+    );
+  }
+
   _PodcastEpisode(this._item);
 
   @override
   Widget build(BuildContext context) {
-    final duration = _item.itunes?.duration;
-    // final pubDate = _item.pubDate;
-    return ListTile(
-      title: Text(_item.title ?? " - "),
-      subtitle: Text(duration != null ? str.formatDuration(duration) : " - "),
-      onTap: () {/* TODO */},
-      trailing: IconButton(
-        icon: Icon(Icons.play_circle_outline),
-        onPressed: () {/* TODO */},
+    final theme = Theme.of(context);
+    final title = _item.itunes?.title ?? _item.title;
+    final pubDate = _item.pubDate;
+
+    return Material(
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () {/* TODO */},
+            child: Ink(
+              child: Container(
+                margin: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (pubDate != null)
+                      Text(DateFormat.yMd().format(pubDate),
+                          style: theme.textTheme.bodyText2),
+                    Text(title ?? " - ", style: theme.textTheme.bodyText1),
+                    _actions(context),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Divider(thickness: 1),
+        ],
       ),
     );
   }

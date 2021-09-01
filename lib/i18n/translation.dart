@@ -57,6 +57,7 @@ abstract class Translation {
   String formatDuration(Duration duration);
   String formatNEpisodes(int n);
   String get noEpisodes;
+  String get play;
 }
 
 class _EngTranslation extends Translation {
@@ -90,11 +91,12 @@ class _EngTranslation extends Translation {
   String get connectionError => "Connection error";
   String formatDuration(Duration duration) {
     if (duration.inHours == 0) return "${duration.inMinutes.remainder(60)}m";
-    return "${duration.inHours}h ${duration.inMinutes.remainder(60)}m";
+    return "${duration.inHours} hr ${duration.inMinutes.remainder(60)} min";
   }
 
   String formatNEpisodes(int n) => "$n Episode${n > 0 ? 's' : ''}";
   String get noEpisodes => "No Episodes";
+  String get play => "Play";
 }
 
 class _AzeTranslation extends Translation {
@@ -128,9 +130,10 @@ class _AzeTranslation extends Translation {
   String get connectionError => "Bağlantı problemi";
   String formatDuration(Duration duration) {
     if (duration.inHours == 0) return "${duration.inMinutes.remainder(60)}d";
-    return "${duration.inHours}s ${duration.inMinutes.remainder(60)}d";
+    return "${duration.inHours} st ${duration.inMinutes.remainder(60)} dq";
   }
 
   String formatNEpisodes(int n) => "$n Epizod";
   String get noEpisodes => "Epizod yoxdur";
+  String get play => "Oynat";
 }
