@@ -10,13 +10,15 @@ part 'itunes_podcast.g.dart';
 class ItunesPodcast {
   String collectionName;
   String feedUrl;
-  Image? image;
   String? artistName;
   String? artworkUrl30;
   String? artworkUrl60;
   String? artworkUrl100;
   String? artworkUrl600;
   String? primaryGenreName;
+
+  @JsonKey(ignore: true)
+  Widget? _artWork;
 
   ItunesPodcast({
     required this.collectionName,
@@ -31,24 +33,24 @@ class ItunesPodcast {
 
   Widget loadArtWork(final BuildContext context,
       {required double widthProportion}) {
-    const defaultIcon = Icon(Icons.podcasts);
+    if (_artWork == null) {
+      const defaultIcon = Icon(Icons.podcasts);
 
-    final String? url =
-        artworkUrl600 ?? artworkUrl100 ?? artworkUrl60 ?? artworkUrl30;
+      final String? url =
+          artworkUrl600 ?? artworkUrl100 ?? artworkUrl60 ?? artworkUrl30;
 
-    if (url == null) return Center(child: defaultIcon);
-
-    final sideLength = MediaQuery.of(context).size.width * widthProportion;
-
-    return Container(
-      width: sideLength,
-      height: sideLength,
-      child: FadeInImage.memoryNetwork(
+      if (url == null) {
+        return Center(child: defaultIcon);
+      }
+      _artWork = FadeInImage.memoryNetwork(
         placeholder: kTransparentImage,
         image: url,
         fit: BoxFit.fill,
-      ),
-    );
+      );
+    }
+
+    final sideLength = MediaQuery.of(context).size.width * widthProportion;
+    return Container(width: sideLength, height: sideLength, child: _artWork!);
   }
 
   factory ItunesPodcast.fromJson(Map<String, dynamic> json) =>

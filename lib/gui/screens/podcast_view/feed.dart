@@ -19,16 +19,23 @@ class _State extends State<PodcastFeed> {
   ItunesPodcast _podcast;
   _State(this._podcast);
 
-  Widget _episodesList() {
+  Widget _body(BuildContext context) {
     final page = Network.loadFeed(_podcast);
     return FutureBuilder(
         future: page,
         builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done)
-            return Center(child: CircularProgressIndicator());
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Column(
+              children: [
+                _infoHeader(context),
+                Spacer(),
+                CircularProgressIndicator(),
+                Spacer(),
+              ],
+            );
+          }
 
-          if (!snapshot.hasData)
-            return Center(child: Text(str.connectionError));
+          if (!snapshot.hasData) return _infoHeader(context);
 
           final data = RssFeed.parse(snapshot.data as String);
           final items = data.items;
@@ -36,23 +43,11 @@ class _State extends State<PodcastFeed> {
           if (items == null) return Center(child: Text(str.noEpisodes));
 
           return ListView.builder(
-            physics: const ScrollPhysics(),
-            shrinkWrap: true,
             itemCount: items.length + 1,
             itemBuilder: (context, index) {
               switch (index) {
                 case 0:
-                  return ListTile(
-                    title: Text(
-                      '${str.formatNEpisodes(items.length)} Episodes',
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.reorder),
-                      onPressed: () {/* TODO */},
-                    ),
-                  );
+                  return _infoHeader(context);
                 default:
                   return _PodcastEpisode(items[index - 1]);
               }
@@ -108,12 +103,6 @@ class _State extends State<PodcastFeed> {
     );
   }
 
-  Widget _body(final BuildContext context) {
-    return ListView(
-      children: [_infoHeader(context), _episodesList()],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,7 +124,7 @@ class _PodcastEpisode extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final duration = _item.itunes?.duration;
-    final pubDate = _item.pubDate;
+    // final pubDate = _item.pubDate;
     return ListTile(
       title: Text(_item.title ?? " - "),
       subtitle: Text(duration != null ? str.formatDuration(duration) : " - "),
