@@ -1,0 +1,111 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            },
+            "warnings": {
+                "dev": true,
+                "deprecated": true,
+                "unusedCli": true
+            }
+        },
+        {
+            "name": "debug",
+            "displayName": "Debug",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_TESTING": "ON"
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Release",
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_TESTING": "OFF"
+            }
+        },
+        {
+            "name": "android-base",
+            "hidden": true,
+            "inherits": "base",
+            "description": "Android base.",
+            "cacheVariables": {
+                "BUILD_TESTING": "OFF",
+                "ANDROID_PLATFORM": "android-26",
+                "ANDROID_STL": "c++_shared"
+            }
+        },
+        {
+            "name": "android-arm64-debug",
+            "displayName": "Android arm64-v8a Debug",
+            "inherits": "android-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "ANDROID_ABI": "arm64-v8a"
+            }
+        },
+        {
+            "name": "android-arm64-release",
+            "displayName": "Android arm64-v8a Release",
+            "inherits": "android-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "ANDROID_ABI": "arm64-v8a"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "debug",
+            "displayName": "Build Debug",
+            "configurePreset": "debug",
+            "jobs": 0
+        },
+        {
+            "name": "release",
+            "displayName": "Build Release",
+            "configurePreset": "release",
+            "jobs": 0
+        },
+        {
+            "name": "android-arm64-debug",
+            "displayName": "Build Android arm64 Debug",
+            "configurePreset": "android-arm64-debug",
+            "jobs": 0
+        },
+        {
+            "name": "android-arm64-release",
+            "displayName": "Build Android arm64 Release",
+            "configurePreset": "android-arm64-release",
+            "jobs": 0
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "debug",
+            "displayName": "Run Tests (Debug)",
+            "configurePreset": "debug",
+            "output": {
+                "outputOnFailure": true
+            },
+            "execution": {
+                "noTestsAction": "error",
+                "stopOnFailure": false
+            }
+        }
+    ]
+}

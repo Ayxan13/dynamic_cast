@@ -1,0 +1,210 @@
+# clang-tidy configuration for DynamicCast.
+# Based on WebKit/Qt idioms + C++20 best practices.
+# Run: clang-tidy -p build/debug <file>
+
+---
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-implicit-widening-of-multiplication-result,
+
+  clang-analyzer-core.*,
+  clang-analyzer-cplusplus.*,
+  clang-analyzer-deadcode.*,
+  clang-analyzer-nullability.*,
+  clang-analyzer-optin.cplusplus.*,
+  clang-analyzer-security.*,
+
+  cppcoreguidelines-avoid-goto,
+  cppcoreguidelines-init-variables,
+  cppcoreguidelines-narrowing-conversions,
+  cppcoreguidelines-no-malloc,
+  cppcoreguidelines-prefer-member-initializer,
+  cppcoreguidelines-pro-type-cstyle-cast,
+  cppcoreguidelines-pro-type-member-init,
+  cppcoreguidelines-pro-type-static-cast-downcast,
+  cppcoreguidelines-slicing,
+  cppcoreguidelines-special-member-functions,
+
+  misc-const-correctness,
+  misc-misplaced-const,
+  misc-non-private-member-variables-in-classes,
+  misc-redundant-expression,
+  misc-throw-by-value-catch-by-reference,
+  misc-uniqueptr-reset-release,
+  misc-unused-alias-decls,
+  misc-unused-parameters,
+  misc-use-anonymous-namespace,
+
+  modernize-avoid-bind,
+  modernize-avoid-c-arrays,
+  modernize-concat-nested-namespaces,
+  modernize-deprecated-headers,
+  modernize-loop-convert,
+  modernize-make-shared,
+  modernize-make-unique,
+  modernize-pass-by-value,
+  modernize-raw-string-literal,
+  modernize-redundant-void-arg,
+  modernize-replace-auto-ptr,
+  modernize-return-braced-init-list,
+  modernize-shrink-to-fit,
+  modernize-type-traits,
+  modernize-use-auto,
+  modernize-use-bool-literals,
+  modernize-use-default-member-init,
+  modernize-use-emplace,
+  modernize-use-noexcept,
+  modernize-use-nullptr,
+  modernize-use-override,
+  modernize-use-ranges,
+  modernize-use-starts-ends-with,
+  modernize-use-std-format,
+  modernize-use-std-print,
+  modernize-use-transparent-functors,
+  modernize-use-uncaught-exceptions,
+  modernize-use-using,
+  -modernize-use-trailing-return-type,
+
+  performance-avoid-endl,
+  performance-faster-string-find,
+  performance-for-range-copy,
+  performance-implicit-conversion-in-loop,
+  performance-inefficient-algorithm,
+  performance-inefficient-string-concatenation,
+  performance-inefficient-vector-operation,
+  performance-move-const-arg,
+  performance-move-constructor-init,
+  performance-no-automatic-move,
+  performance-noexcept-destructor,
+  performance-noexcept-move-constructor,
+  performance-trivially-destructible,
+  performance-type-promotion-in-math-fn,
+  performance-unnecessary-copy-initialization,
+  performance-unnecessary-value-param,
+
+  readability-avoid-const-params-in-decls,
+  readability-avoid-nested-conditional-operator,
+  readability-avoid-return-with-void-value,
+  readability-braces-around-statements,
+  readability-const-return-type,
+  readability-container-contains,
+  readability-container-data-pointer,
+  readability-container-size-empty,
+  readability-delete-null-pointer,
+  readability-duplicate-include,
+  readability-else-after-return,
+  readability-enum-initial-value,
+  readability-function-cognitive-complexity,
+  readability-implicit-bool-conversion,
+  readability-inconsistent-declaration-parameter-name,
+  readability-make-member-function-const,
+  readability-misplaced-array-index,
+  readability-named-parameter,
+  readability-non-const-parameter,
+  readability-operators-representation,
+  readability-qualified-auto,
+  readability-redundant-access-specifiers,
+  readability-redundant-casting,
+  readability-redundant-control-flow,
+  readability-redundant-declaration,
+  readability-redundant-function-ptr-dereference,
+  readability-redundant-member-init,
+  readability-redundant-preprocessor,
+  readability-redundant-smartptr-get,
+  readability-redundant-string-cstr,
+  readability-redundant-string-init,
+  readability-simplify-boolean-expr,
+  readability-simplify-subscript-expr,
+  readability-static-accessed-through-instance,
+  readability-static-definition-in-anonymous-namespace,
+  readability-string-compare,
+  readability-uniqueptr-delete-release,
+  readability-use-anyofallof,
+  readability-use-std-min-max,
+
+# ── Per-check options ──────────────────────────────────────────────────────────
+CheckOptions:
+  # ── Naming (WebKit / Qt style) ──────────────────────────────────────────
+  - key:   readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key:   readability-identifier-naming.StructCase
+    value: CamelCase
+  - key:   readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key:   readability-identifier-naming.EnumConstantCase
+    value: CamelCase                          # DownloadState::NotDownloaded
+  - key:   readability-identifier-naming.FunctionCase
+    value: camelCase
+  - key:   readability-identifier-naming.MemberCase
+    value: camelCase
+  - key:   readability-identifier-naming.MemberPrefix
+    value: m_
+  - key:   readability-identifier-naming.PrivateMemberCase
+    value: camelCase
+  - key:   readability-identifier-naming.PrivateMemberPrefix
+    value: m_
+  - key:   readability-identifier-naming.ParameterCase
+    value: camelCase
+  - key:   readability-identifier-naming.LocalVariableCase
+    value: camelCase
+  - key:   readability-identifier-naming.StaticVariableCase
+    value: camelCase
+  - key:   readability-identifier-naming.ConstexprVariableCase
+    value: CamelCase
+  - key:   readability-identifier-naming.ConstexprVariablePrefix
+    value: k
+  - key:   readability-identifier-naming.GlobalConstantCase
+    value: CamelCase
+  - key:   readability-identifier-naming.GlobalConstantPrefix
+    value: k
+  - key:   readability-identifier-naming.NamespaceCase
+    value: lower_case
+  - key:   readability-identifier-naming.TypeAliasCase
+    value: CamelCase
+  - key:   readability-identifier-naming.TypedefCase
+    value: CamelCase
+  - key:   readability-identifier-naming.TemplateParameterCase
+    value: CamelCase
+
+  # ── Cognitive complexity — generous threshold for Qt slot implementations ──
+  - key:   readability-function-cognitive-complexity.Threshold
+    value: "30"
+  - key:   readability-function-cognitive-complexity.IgnoreMacros
+    value: "true"
+
+  # ── modernize-pass-by-value: only for move-constructible types ────────────
+  - key:   modernize-pass-by-value.IncludeStyle
+    value: google
+
+  # ── misc-non-private-member-variables: allow structs with all public members
+  - key:   misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
+    value: "true"
+
+  # ── cppcoreguidelines-special-member-functions: Qt classes often only
+  #    declare some of the five — relax so generated QObject subclasses pass ──
+  - key:   cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
+    value: "true"
+  - key:   cppcoreguidelines-special-member-functions.AllowMissingMoveFunctions
+    value: "true"
+
+  # ── misc-const-correctness ─────────────────────────────────────────────────
+  - key:   misc-const-correctness.AnalyzeValues
+    value: "true"
+  - key:   misc-const-correctness.WarnPointersAsValues
+    value: "false"
+
+  # ── performance-unnecessary-value-param: ignore QObject* params ───────────
+  - key:   performance-unnecessary-value-param.AllowedTypes
+    value: "QStringList;QVariant"
+
+# ── Paths to ignore ────────────────────────────────────────────────────────────
+# Generated MOC files and third-party code should not be linted.
+HeaderFilterRegex: "^(?!.*(build/|moc_|qrc_|ui_)).*\\.(h|hpp)$"
+
+# Use -extra-arg=-Wno-unknown-warning-option to suppress warnings from
+# Qt headers that clang-tidy flags when analysing project source files.
+ExtraArgs:
+  - -Wno-unknown-warning-option
+  - -Wno-unused-command-line-argument
