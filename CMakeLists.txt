@@ -7,18 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-if(MSVC)
-    add_compile_options(
-        /GR-    # Disables RTTI
-        /EHs-c- # Disables C++ Exceptions
-    )
-else()
-    add_compile_options(-fno-rtti -fno-exceptions)
-endif()
-
 include(cmake/bootstrap.cmake)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS
+find_package(Qt6 REQUIRED COMPONENTS
     Core
     Gui
     Widgets
@@ -32,10 +23,11 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS
     Concurrent
 )
 
-option(BUILD_TESTING "Build tests" ON)
-if (BUILD_TESTING)
-    include(FetchContent)
+# --- Dependencies ---
+include(FetchContent)
 
+option(DC_BUILD_TESTING "Build tests" ON)
+if (DC_BUILD_TESTING)
     FetchContent_Declare(
       Catch2
       GIT_REPOSITORY https://github.com/catchorg/Catch2.git
@@ -46,9 +38,22 @@ if (BUILD_TESTING)
     enable_testing()
 endif()
 
+FetchContent_Declare(
+    QCoro
+    GIT_REPOSITORY https://github.com/danvratil/qcoro.git
+    GIT_TAG        v0.13.0
+)
+
+set(QCORO_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(QCORO_BUILD_TESTING OFF CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(QCoro)
+qcoro_enable_coroutines()
+
+
 # add_subdirectory(src/core)
 add_subdirectory(src/common)
-# add_subdirectory(src/backend)
+add_subdirectory(src/backend)
 # add_subdirectory(src/audio)
 # add_subdirectory(src/viewmodels)
 # add_subdirectory(src/services)

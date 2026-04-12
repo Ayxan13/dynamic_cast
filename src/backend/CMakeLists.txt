@@ -1,7 +1,8 @@
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp")
+include("${CMAKE_SOURCE_DIR}/cmake/component.cmake")
 
-set(LIB_NAME "dynamic_cast_backend")
-qt_add_library("${LIB_NAME}" STATIC ${SOURCES})
+addComponent(backend Qt6::Core Qt6::Network  QCoro6::Core QCoro6::Network)
 
-target_include_directories("${LIB_NAME}" PUBLIC "include")
-target_link_libraries("${LIB_NAME}" PUBLIC Qt6::Core)
+target_link_libraries(dynamic_cast_backend
+    PUBLIC
+        dynamic_cast::common
+)

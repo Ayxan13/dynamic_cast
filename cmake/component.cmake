@@ -13,7 +13,7 @@ function(addComponent COMPONENT_NAME) # Add all the Qt dependencies to be linked
     add_library(dynamic_cast::${COMPONENT_NAME} ALIAS ${LIB_NAME})
     target_include_directories("${LIB_NAME}" PUBLIC "include")
 
-    if(BUILD_TESTING)
+    if(DC_BUILD_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt")
         add_subdirectory("tests")
     endif()
 endfunction()

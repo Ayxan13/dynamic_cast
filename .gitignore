@@ -3,6 +3,7 @@ build-*/
 .cache/
 .clangd/
 .qt/
+.vscode/
 .venv/
 compile_commands.json
 CMakeUserPresets.json

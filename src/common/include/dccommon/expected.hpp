@@ -2,6 +2,7 @@
 
 #include <variant>
 
+namespace dc {
 template <class Res, class Err>
 class Expected : private std::variant<Res, Err> {
     using Variant = std::variant<Res, Err>;
@@ -25,3 +26,4 @@ public:
     Res* result() { return std::get_if<Res>(&this->variant()); }
     const Res* result() const { return std::get_if<Res>(&this->variant()); }
 };
+}

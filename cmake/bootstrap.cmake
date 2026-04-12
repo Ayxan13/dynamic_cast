@@ -4,10 +4,9 @@ if(CMAKE_CROSSCOMPILING)
 endif()
 
 # Options
-set(DC_QT_VERSION  "6.8.2" CACHE STRING "Qt version to install via aqt (e.g. 6.7.3, 6.8.2)")
+set(DC_QT_VERSION  "6.11.0" CACHE STRING "Qt version to install via aqt (e.g. 6.7.3, 6.8.2)")
 set(DC_QT_BASE_DIR "${CMAKE_SOURCE_DIR}/.qt" CACHE PATH "Directory where aqt downloads Qt installations")
 set(DC_VENV_DIR    "${CMAKE_SOURCE_DIR}/.venv" CACHE PATH "Python virtual environment used for aqtinstall")
-option(DC_ENABLE_WEBENGINE "Also download Qt WebEngine via aqt. Enables HTML show notes (large download)" OFF)
 mark_as_advanced(DC_QT_BASE_DIR DC_VENV_DIR)
 
 # Platform configuration
@@ -85,13 +84,7 @@ if(NOT _dc_pip_rc EQUAL 0)
 endif()
 
 # Assemble the list of extra Qt modules
-set(_dc_modules qtmultimedia)
-
-# qtsvg is included in the base aqt download; only qtmultimedia needs explicit listing
-if(DC_ENABLE_WEBENGINE)
-    list(APPEND _dc_modules qtwebengine qtwebchannel)
-    message(STATUS "[dc:bootstrap] DC_ENABLE_WEBENGINE=ON. Adding qtwebengine (this download is large and slow).")
-endif()
+set(_dc_modules qtmultimedia qtwebsockets qtwebengine qtwebchannel qttasktree)
 
 # Download Qt
 message(STATUS "[dc:bootstrap] Downloading Qt ${DC_QT_VERSION} "

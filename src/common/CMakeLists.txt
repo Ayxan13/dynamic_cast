@@ -1,4 +1,3 @@
 include("${CMAKE_SOURCE_DIR}/cmake/component.cmake")
 
-addComponent(common)
-
+addComponent(common Qt6::Core)
