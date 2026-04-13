@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Material
-import DynamicCast 1.0
+import DynamicCast
 
 ApplicationWindow {
     id: root
@@ -15,4 +15,8 @@ ApplicationWindow {
     Material.background: "#0f0f1e"
 
     color: "#0f0f1e"
+
+    AppRouter {
+        anchors.fill: parent
+    }
 }

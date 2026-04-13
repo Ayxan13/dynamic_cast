@@ -1,3 +1,4 @@
+#include <QtGui/QFontDatabase>
 #include <QtGui/QGuiApplication>
 #include <QtQml/QQmlApplicationEngine>
 
@@ -7,6 +8,8 @@ Q_IMPORT_QML_PLUGIN(DynamicCastPlugin)
 int main(int argc, char* argv[])
 {
     QGuiApplication app(argc, argv);
+    QFontDatabase::addApplicationFont(
+        ":/qt/qml/DynamicCast/assets/fonts/MaterialIcons-Regular.ttf");
 
     QQmlApplicationEngine engine;
     QObject::connect(
