@@ -6,7 +6,8 @@ Item {
     id: root
 
     readonly property var components: [
-        { name: "SearchBar", source: Qt.resolvedUrl("previews/SearchBarPreview.qml") }
+        { name: "SearchBar",    source: Qt.resolvedUrl("previews/SearchBarPreview.qml")    },
+        { name: "BottomNavBar", source: Qt.resolvedUrl("previews/BottomNavBarPreview.qml") }
     ]
 
     property int selectedIndex: 0
