@@ -6,31 +6,67 @@ FocusScope {
 
     property alias text: input.text
     property string placeholder: "Search"
+    property bool collapsible: false
+    property real expandedWidth: 300
+
+    // Read-only: true when collapsible and currently showing as icon only
+    readonly property bool collapsed: collapsible && !expanded
+
+    // Writable so parents can collapse programmatically
+    property bool expanded: false
 
     signal accepted(string text)
 
-    implicitWidth: 300
+    // Collapse with optional text clear — call from outside to dismiss
+    function dismiss() {
+        input.text = ""
+        expanded = false
+    }
+
+    implicitWidth: collapsed ? 44 : expandedWidth
     implicitHeight: 44
 
     opacity: enabled ? 1.0 : 0.4
+
+    // Suppressed during initialization: when the parent assigns collapsible:true the
+    // implicitWidth binding fires (300→44) before the first frame; without this guard
+    // the Behavior would play a spurious collapse animation on every page load.
+    property bool _behaviorEnabled: false
+    Component.onCompleted: Qt.callLater(function() { root._behaviorEnabled = true })
+
+    Behavior on implicitWidth {
+        enabled: root._behaviorEnabled
+        NumberAnimation { duration: Theme.animNormal; easing.type: Easing.OutCubic }
+    }
+
+    // Collapse when focus leaves and no text is present
+    onActiveFocusChanged: {
+        if (collapsible && !activeFocus && input.text.length === 0)
+            expanded = false
+    }
 
     Rectangle {
         anchors.fill: parent
         radius: Theme.radiusFull
         color: Theme.bgElevated
-        border.color: root.activeFocus ? Theme.accent : Theme.divider
+        border.color: root.collapsed ? "transparent"
+                    : root.activeFocus ? Theme.accent
+                    : Theme.divider
         border.width: 1.5
+        clip: true
 
         Behavior on border.color {
             ColorAnimation { duration: Theme.animFast }
         }
 
-        // Search icon
+        // Search icon — centred when collapsed, left-aligned when expanded
         Text {
             id: searchIcon
             anchors {
                 left: parent.left
-                leftMargin: Theme.spaceMd
+                leftMargin: root.collapsed
+                    ? Math.round((parent.width - width) / 2)
+                    : Theme.spaceMd
                 verticalCenter: parent.verticalCenter
             }
             text: "\ue8b6"
@@ -43,7 +79,7 @@ FocusScope {
             }
         }
 
-        // Placeholder
+        // Placeholder — hidden when collapsed
         Text {
             anchors {
                 left: searchIcon.right
@@ -57,10 +93,10 @@ FocusScope {
             font.family: Theme.fontFamily
             color: Theme.textDisabled
             elide: Text.ElideRight
-            visible: input.text.length === 0 && !root.activeFocus
+            visible: input.text.length === 0 && !root.activeFocus && !root.collapsed
         }
 
-        // Text input
+        // Text input — hidden when collapsed
         TextInput {
             id: input
             anchors {
@@ -75,10 +111,11 @@ FocusScope {
             font.family: Theme.fontFamily
             focus: true
             clip: true
+            visible: !root.collapsed
             onAccepted: root.accepted(text)
         }
 
-        // Clear button
+        // Clear button — hidden when collapsed
         Text {
             id: clearBtn
             anchors {
@@ -90,7 +127,7 @@ FocusScope {
             font.family: "Material Icons"
             font.pixelSize: Theme.iconSizeSm
             color: Theme.textSecondary
-            visible: input.text.length > 0
+            visible: input.text.length > 0 && !root.collapsed
 
             MouseArea {
                 anchors.fill: parent
@@ -100,6 +137,17 @@ FocusScope {
                     input.forceActiveFocus()
                 }
             }
+        }
+    }
+
+    // Tap anywhere in collapsed state to expand
+    MouseArea {
+        anchors.fill: parent
+        enabled: root.collapsed
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+            root.expanded = true
+            input.forceActiveFocus()
         }
     }
 }

@@ -6,11 +6,13 @@ Item {
     id: root
 
     readonly property var components: [
-        { name: "SearchBar",        source: Qt.resolvedUrl("previews/SearchBarPreview.qml")        },
-        { name: "BottomNavBar",     source: Qt.resolvedUrl("previews/BottomNavBarPreview.qml")     },
-        { name: "MiniPlayer",       source: Qt.resolvedUrl("previews/MiniPlayerPreview.qml")       },
-        { name: "PodcastResultRow", source: Qt.resolvedUrl("previews/PodcastResultRowPreview.qml") },
-        { name: "SearchPage",       source: Qt.resolvedUrl("previews/SearchPagePreview.qml")       }
+        { name: "SearchBar",           source: Qt.resolvedUrl("previews/SearchBarPreview.qml")           },
+        { name: "BottomNavBar",        source: Qt.resolvedUrl("previews/BottomNavBarPreview.qml")        },
+        { name: "MiniPlayer",          source: Qt.resolvedUrl("previews/MiniPlayerPreview.qml")          },
+        { name: "PodcastResultRow",    source: Qt.resolvedUrl("previews/PodcastResultRowPreview.qml")    },
+        { name: "PodcastArtworkCard",  source: Qt.resolvedUrl("previews/PodcastArtworkCardPreview.qml")  },
+        { name: "SearchPage",          source: Qt.resolvedUrl("previews/SearchPagePreview.qml")          },
+        { name: "SubscriptionsPage",   source: Qt.resolvedUrl("previews/SubscriptionsPagePreview.qml")   }
     ]
 
     property int selectedIndex: {
