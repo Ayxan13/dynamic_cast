@@ -6,6 +6,8 @@ import DynamicCast
 Item {
     id: root
 
+    property int currentIndex: 0
+
     readonly property var navItems: [
         { icon: "\ue88a", label: "Home",          page: "pages/HomePage.qml"          },
         { icon: "\ue5c3", label: "Subscriptions", page: "pages/SubscriptionsPage.qml" },
