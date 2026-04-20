@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <rect width="48" height="48" fill="#1b3a4b"/>
+  <!-- Waveform bars -->
+  <rect x="10" y="22" width="4" height="4"  rx="2" fill="#4db6ac"/>
+  <rect x="16" y="17" width="4" height="14" rx="2" fill="#4db6ac"/>
+  <rect x="22" y="13" width="4" height="22" rx="2" fill="#80cbc4"/>
+  <rect x="28" y="17" width="4" height="14" rx="2" fill="#4db6ac"/>
+  <rect x="34" y="22" width="4" height="4"  rx="2" fill="#4db6ac"/>
+</svg>

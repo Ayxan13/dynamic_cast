@@ -7,10 +7,15 @@ Item {
 
     readonly property var components: [
         { name: "SearchBar",    source: Qt.resolvedUrl("previews/SearchBarPreview.qml")    },
-        { name: "BottomNavBar", source: Qt.resolvedUrl("previews/BottomNavBarPreview.qml") }
+        { name: "BottomNavBar", source: Qt.resolvedUrl("previews/BottomNavBarPreview.qml") },
+        { name: "MiniPlayer",   source: Qt.resolvedUrl("previews/MiniPlayerPreview.qml")   }
     ]
 
-    property int selectedIndex: 0
+    property int selectedIndex: {
+        if (typeof _initialComponent === "undefined" || _initialComponent === "") return 0
+        const idx = components.findIndex(c => c.name === _initialComponent)
+        return idx >= 0 ? idx : 0
+    }
 
     // ── Sidebar ───────────────────────────────────────────────────────────────
     Rectangle {

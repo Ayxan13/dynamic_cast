@@ -3,6 +3,7 @@
 #include <QtGui/QFontDatabase>
 #include <QtGui/QGuiApplication>
 #include <QtQml/QQmlApplicationEngine>
+#include <QtQml/QQmlContext>
 #include <QtQuick/QQuickWindow>
 
 #include <QtQml/QQmlExtensionPlugin>
@@ -18,7 +19,12 @@ int main(int argc, char* argv[])
         "screenshot",
         "Render the gallery, save a screenshot to <path>, then exit.",
         "path");
+    QCommandLineOption componentOpt(
+        "component",
+        "Pre-select a component by name (e.g. MiniPlayer).",
+        "name");
     parser.addOption(screenshotOpt);
+    parser.addOption(componentOpt);
     parser.process(app);
 
     QFontDatabase::addApplicationFont(
@@ -59,6 +65,12 @@ int main(int argc, char* argv[])
             },
             Qt::QueuedConnection);
     }
+
+    // Expose the initial component name as a context property so Gallery.qml
+    // can read it synchronously during construction (before any bindings fire).
+    const QString initialComponent =
+        parser.isSet(componentOpt) ? parser.value(componentOpt) : QString{};
+    engine.rootContext()->setContextProperty("_initialComponent", initialComponent);
 
     engine.loadFromModule("DynamicCastGallery", "GalleryMain");
 
