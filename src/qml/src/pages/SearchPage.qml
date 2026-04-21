@@ -177,7 +177,7 @@ Item {
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "ue000"   // error_outline
+                text: "\ue000"  // error_outline
                 font.family: "Material Icons"
                 font.pixelSize: Theme.iconSizeXl
                 color: Theme.error
