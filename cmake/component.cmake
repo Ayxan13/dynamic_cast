@@ -1,7 +1,7 @@
 function(addComponent COMPONENT_NAME) # Add all the Qt dependencies to be linked (Qt6::Core, etc) as extra arguments
     set(LIB_NAME "dynamic_cast_${COMPONENT_NAME}")
     
-    file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp")
+    file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp" "include/*.hpp")
 
     if(ARGN)
         qt_add_library("${LIB_NAME}" STATIC ${SOURCES})

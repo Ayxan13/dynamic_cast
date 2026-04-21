@@ -16,7 +16,9 @@ qt_import_qml_plugins(gallery)
 
 target_link_libraries(gallery
     PRIVATE
+        dynamic_cast::backend
         dynamic_cast::qml
         dynamic_cast_qmlplugin
         Qt6::Gui Qt6::Core Qt6::Qml Qt6::Quick Qt6::QuickControls2
+        QCoro6::Core QCoro6::Network
 )

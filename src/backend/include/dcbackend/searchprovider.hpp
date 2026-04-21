@@ -4,7 +4,8 @@
 #include <QCoro/QCoroTask>
 #include <memory>
 
-#include "dccommon/expected.hpp"
+#include <dccommon/expected.hpp>
+#include <dcbackend/networkprovider.hpp>
 #include <dccommon/qtext.hpp>
 #include <qcontainerfwd.h>
 #include <qjsonparseerror.h>
@@ -31,11 +32,6 @@ struct PodcastSearchResult {
     bool isExplicit; // contentAdvisoryRating
 
     bool operator==(const PodcastSearchResult&) const = default;
-};
-
-struct INetworkProvider {
-    virtual ~INetworkProvider() = default;
-    virtual DeleteLaterUniquePtr<QNetworkReply> get(const QUrl&) = 0;
 };
 
 struct ISearchProvider {

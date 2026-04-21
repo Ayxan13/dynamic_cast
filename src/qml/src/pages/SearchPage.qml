@@ -7,20 +7,22 @@ Item {
 
     // ── State ─────────────────────────────────────────────────────────────────
     // "idle"    — no query, show discovery prompt
-    // "typing"  — text changed, debounce running, results cleared (blank)
+    // "typing"  — text changed, debounce running
     // "loading" — debounce fired, awaiting results
     // "results" — results present
     // "empty"   — search done, nothing found
+    // "error"   — search failed
     readonly property string state_: {
-        if (searchBar.text.trim().length === 0)   return "idle"
-        if (debounce.running)                     return "typing"
-        if (resultsModel.count > 0)               return "results"
-        if (isLoading)                            return "loading"
+        if (searchBar.text.trim().length === 0) return "idle"
+        if (debounce.running)                   return "typing"
+        if (searchController.loading)           return "loading"
+        if (errorMessage.length > 0)            return "error"
+        if (resultsModel.count > 0)             return "results"
         return "empty"
     }
 
-    property bool isLoading: false
     property string lastQuery: ""
+    property string errorMessage: ""
 
     // ── Debounce timer ────────────────────────────────────────────────────────
     Timer {
@@ -31,51 +33,35 @@ Item {
             const q = searchBar.text.trim()
             if (q.length === 0) return
             root.lastQuery = q
-            root.isLoading = true
+            root.errorMessage = ""
             resultsModel.clear()
-            simulatorIndex = 0
-            resultSimulator.start()
+            searchController.search(q)
         }
     }
 
-    // ── Result simulation (replace with real backend call later) ─────────────
-    property int simulatorIndex: 0
-    readonly property var fakeResults: [
-        { podcastName: "Crime Junkie",            author: "audiochuck",            artworkUrl: "" },
-        { podcastName: "Serial",                  author: "This American Life",    artworkUrl: "" },
-        { podcastName: "Stuff You Should Know",   author: "iHeart Podcasts",       artworkUrl: "" },
-        { podcastName: "The Daily",               author: "The New York Times",    artworkUrl: "" },
-        { podcastName: "Hardcore History",        author: "Dan Carlin",            artworkUrl: "" },
-        { podcastName: "My Favorite Murder",      author: "Exactly Right Media",   artworkUrl: "" },
-        { podcastName: "The Rest Is History",     author: "Goalhanger Podcasts",   artworkUrl: "" },
-        { podcastName: "Armchair Expert",         author: "Dax Shepard",           artworkUrl: "" },
-    ]
+    Connections {
+        target: searchController
 
-    Timer {
-        id: resultSimulator
-        interval: 120
-        repeat: true
-        onTriggered: {
-            if (root.simulatorIndex >= root.fakeResults.length) {
-                root.isLoading = false
-                resultSimulator.stop()
-                return
+        function onResultsReady(results) {
+            resultsModel.clear()
+            for (const r of results) {
+                resultsModel.append({
+                    podcastName: r.podcastName,
+                    author:      r.author,
+                    artworkUrl:  r.artworkUrl,
+                    subscribed:  false
+                })
             }
-            const r = root.fakeResults[root.simulatorIndex]
-            resultsModel.append({
-                podcastName: r.podcastName,
-                author:      r.author,
-                artworkUrl:  r.artworkUrl,
-                subscribed:  false
-            })
-            root.simulatorIndex++
+        }
+
+        function onSearchFailed(error) {
+            root.errorMessage = error
         }
     }
 
     ListModel { id: resultsModel }
 
     // ── Layout ────────────────────────────────────────────────────────────────
-    // Search bar — sticky at the top
     SearchBar {
         id: searchBar
         anchors {
@@ -90,15 +76,13 @@ Item {
 
         onTextChanged: {
             resultsModel.clear()
-            root.isLoading = false
-            resultSimulator.stop()
+            root.errorMessage = ""
             debounce.restart()
         }
 
         Component.onCompleted: forceActiveFocus()
     }
 
-    // Content area below the search bar
     Item {
         anchors {
             top: searchBar.bottom
@@ -118,7 +102,7 @@ Item {
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "\ue8b6"   // search
+                text: "\ue8b6" // podcast icon
                 font.family: "Material Icons"
                 font.pixelSize: Theme.iconSizeXl
                 color: Theme.textDisabled
@@ -171,7 +155,7 @@ Item {
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "\ue5c9"   // search_off
+                text: "\ue5c9" // cancel icon
                 font.family: "Material Icons"
                 font.pixelSize: Theme.iconSizeXl
                 color: Theme.textDisabled
@@ -185,18 +169,49 @@ Item {
             }
         }
 
+        // ── Error state ──────────────────────────────────────────────────
+        Column {
+            anchors.centerIn: parent
+            spacing: Theme.spaceSm
+            visible: root.state_ === "error"
+            opacity: visible ? 1 : 0
+            Behavior on opacity { NumberAnimation { duration: Theme.animFast } }
+
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "ue000"   // error_outline
+                font.family: "Material Icons"
+                font.pixelSize: Theme.iconSizeXl
+                color: Theme.error
+            }
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "Search failed"
+                font.pixelSize: Theme.fontSizeMd
+                font.family: Theme.fontFamily
+                font.weight: Theme.fontWeightMedium
+                color: Theme.textSecondary
+            }
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: root.errorMessage
+                font.pixelSize: Theme.fontSizeXs
+                font.family: Theme.fontFamily
+                color: Theme.textDisabled
+            }
+        }
+
         // ── Results list ─────────────────────────────────────────────────
         ListView {
             id: resultsList
             anchors.fill: parent
             model: resultsModel
             clip: true
-            visible: root.state_ === "results" || root.state_ === "loading" && resultsModel.count > 0
+            visible: root.state_ === "results"
 
-            // Animate rows sliding in from the bottom
             add: Transition {
                 NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Theme.animFast }
-                NumberAnimation { property: "y";       from: 8;        duration: Theme.animFast; easing.type: Easing.OutCubic }
+                NumberAnimation { property: "y"; from: 8; duration: Theme.animFast; easing.type: Easing.OutCubic }
             }
 
             delegate: Column {
