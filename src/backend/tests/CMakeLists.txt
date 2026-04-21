@@ -16,3 +16,8 @@ addTest(
 addTest(
     COMPONENT_NAME backend
     TEST_NAME feedparser)
+
+addTest(
+    COMPONENT_NAME backend
+    TEST_NAME feedprovider
+    NO_MAIN "ON")
