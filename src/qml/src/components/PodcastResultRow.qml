@@ -9,6 +9,7 @@ Item {
     property url artworkSource
     property bool subscribed: false
 
+    signal rowClicked()
     signal subscribeClicked()
 
     implicitHeight: Theme.miniPlayerHeight
@@ -24,6 +25,8 @@ Item {
     MouseArea {
         id: tapArea
         anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: root.rowClicked()
     }
 
     // Artwork thumbnail

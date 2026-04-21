@@ -17,6 +17,7 @@ struct PodcastEpisode {
 
     QDateTime pubDate;
     QString duration;
+    int episodeNumber = -1; // 1 = not specified
 
     bool isExplicit = false;
 };

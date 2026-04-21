@@ -9,10 +9,10 @@ Item {
     property int currentIndex: 0
 
     readonly property var navItems: [
-        { icon: "\ue88a", label: "Home",          page: "pages/HomePage.qml"          },
-        { icon: "\ue5c3", label: "Subscriptions", page: "pages/SubscriptionsPage.qml" },
-        { icon: "\ue8b6", label: "Search",        page: "pages/SearchPage.qml"        },
-        { icon: "\ue2c4", label: "Downloads",     page: "pages/DownloadsPage.qml"     }
+        { icon: "", label: "Home",          page: "pages/HomePage.qml"          },
+        { icon: "", label: "Subscriptions", page: "pages/SubscriptionsPage.qml" },
+        { icon: "", label: "Search",        page: "pages/SearchPage.qml"        },
+        { icon: "", label: "Downloads",     page: "pages/DownloadsPage.qml"     }
     ]
 
     StackView {
@@ -27,24 +27,26 @@ Item {
         initialItem: "pages/HomePage.qml"
 
         pushEnter: Transition {
-            XAnimator { from: stack.width; to: 0; duration: Theme.animNormal; easing.type: Easing.OutCubic }
+            PropertyAction  { property: "z"; value: 1 }
+            NumberAnimation { property: "x"; from: stack.width; to: 0; duration: Theme.animNormal; easing.type: Easing.OutCubic }
         }
         pushExit: Transition {
-            XAnimator { from: 0; to: -stack.width / 3; duration: Theme.animNormal; easing.type: Easing.OutCubic }
-            OpacityAnimator { from: 1; to: 0.5; duration: Theme.animNormal }
+            PropertyAction  { property: "z"; value: 0 }
+            NumberAnimation { property: "x"; from: 0; to: -stack.width / 3; duration: Theme.animNormal; easing.type: Easing.OutCubic }
+            NumberAnimation { property: "opacity"; from: 1; to: 0.5; duration: Theme.animNormal }
         }
         popEnter: Transition {
-            XAnimator { from: -stack.width / 3; to: 0; duration: Theme.animNormal; easing.type: Easing.OutCubic }
-            OpacityAnimator { from: 0.5; to: 1; duration: Theme.animNormal }
+            PropertyAction  { property: "z"; value: 0 }
+            NumberAnimation { property: "x"; from: -stack.width / 3; to: 0; duration: Theme.animNormal; easing.type: Easing.OutCubic }
+            NumberAnimation { property: "opacity"; from: 0.5; to: 1; duration: Theme.animNormal }
         }
         popExit: Transition {
-            XAnimator { from: 0; to: stack.width; duration: Theme.animNormal; easing.type: Easing.OutCubic }
+            PropertyAction  { property: "z"; value: 1 }
+            NumberAnimation { property: "x"; from: 0; to: stack.width; duration: Theme.animNormal; easing.type: Easing.OutCubic }
         }
 
-        function navigateTo(pageUrl, props) {
-            if (stack.depth > 0 &&
-                stack.currentItem.toString().indexOf(pageUrl) >= 0) return
-            stack.push(Qt.resolvedUrl(pageUrl), props || {})
+        Component.onCompleted: {
+            AppNavigation.stackView = stack
         }
 
         function replaceRoot(pageUrl) {

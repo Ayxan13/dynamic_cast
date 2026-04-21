@@ -51,6 +51,7 @@ QCoro::Task<QList<dc::PodcastResult>> dc::SearchController::doSearch(QString ter
             .podcastName = pod.title,
             .author = pod.hosts,
             .artworkUrl = pod.artworkUrl100,
+            .rssUrl = pod.rss,
         });
     }
     co_return list;

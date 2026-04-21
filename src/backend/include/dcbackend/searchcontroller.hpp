@@ -13,10 +13,12 @@ struct PodcastResult {
     Q_PROPERTY(QString podcastName MEMBER podcastName)
     Q_PROPERTY(QString author MEMBER author)
     Q_PROPERTY(QString artworkUrl MEMBER artworkUrl)
+    Q_PROPERTY(QString rssUrl MEMBER rssUrl)
 public:
     QString podcastName;
     QString author;
     QString artworkUrl;
+    QString rssUrl;
 };
 
 class SearchController final : public QObject {

@@ -60,6 +60,12 @@ struct FeedParser final : public dc::IFeedParser {
                         episode->pubDate = QDateTime::fromString(reader.readElementText(), Qt::RFC2822Date);
                     } else if (reader.name() == u"duration"_s) {
                         episode->duration = reader.readElementText();
+                    } else if (reader.name() == u"episode"_s) {
+                        bool ok = false;
+                        int n = reader.readElementText().toInt(&ok);
+                        if (ok && n > 0) {
+                            episode->episodeNumber = n;
+                        }
                     } else if (reader.name() == u"explicit"_s) {
                         episode->isExplicit = parseIsExplicit(reader.readElementText());
                     }

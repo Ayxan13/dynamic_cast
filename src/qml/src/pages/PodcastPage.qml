@@ -2,8 +2,12 @@ import QtQuick
 import QtQuick.Controls
 import DynamicCast
 
-Item {
+Rectangle {
     id: root
+    color: Theme.bgBase
+
+    // ── Feed source ───────────────────────────────────────────────────────────
+    property string feedUrl: ""
 
     // ── PodcastOverview forwarded props ───────────────────────────────────────
     property url    artworkSource:        ""
@@ -18,8 +22,6 @@ Item {
     property string websiteUrl:           ""
 
     // ── Episode list ──────────────────────────────────────────────────────────
-    // Each element: { episodeNumber, releaseDate, title, durationMinutes,
-    //                 progress, playing, archived }
     property var episodes: []
 
     // ── Signals ───────────────────────────────────────────────────────────────
@@ -33,9 +35,65 @@ Item {
     signal websiteClicked()
 
     // ── Internal state ────────────────────────────────────────────────────────
-    property bool   showArchived: false
-    property string _searchText:  ""
+    property bool   showArchived:  false
+    property bool   _reverseOrder: false
+    property string _searchText:   ""
+    property bool   _feedLoading:  false
+    property bool   _feedReady:    false
+    property string _feedError:    ""
 
+    // ── Feed fetch ────────────────────────────────────────────────────────────
+    function parseDurationMinutes(str) {
+        if (!str || str === "") return -1
+        var parts = str.split(":")
+        if (parts.length === 3) return parseInt(parts[0]) * 60 + parseInt(parts[1])
+        if (parts.length === 2) return parseInt(parts[0])
+        var secs = parseInt(str)
+        if (!isNaN(secs) && secs > 0) return Math.floor(secs / 60)
+        return -1
+    }
+
+    onFeedUrlChanged: {
+        if (feedUrl === "") return
+        root._feedLoading = true
+        root._feedReady   = false
+        root._feedError   = ""
+        feedController.fetch(feedUrl).then(function(feed) {
+            root._feedLoading = false
+            if (!feed || feed.title === "") return
+            root.podcastName   = feed.title
+            root.author        = feed.hosts
+            root.description   = feed.description
+            root.artworkSource = feed.imageUrl !== "" ? Qt.url(feed.imageUrl) : root.artworkSource
+            root.genre         = feed.primaryGenre
+            root.websiteUrl    = feed.link
+            var eps = []
+            for (var i = 0; i < feed.episodes.length; i++) {
+                var ep = feed.episodes[i]
+                eps.push({
+                    episodeNumber:   ep.episodeNumber,
+                    title:           ep.title,
+                    releaseDate:     ep.pubDate,
+                    durationMinutes: root.parseDurationMinutes(ep.duration),
+                    progress:        0,
+                    playing:         false,
+                    archived:        false
+                })
+            }
+            root.episodes  = eps
+            root._feedReady = true
+        })
+    }
+
+    Connections {
+        target: feedController
+        function onFetchFailed(error) {
+            root._feedLoading = false
+            root._feedError   = error
+        }
+    }
+
+    // ── Derived lists ─────────────────────────────────────────────────────────
     readonly property int archivedCount: {
         var n = 0
         for (var i = 0; i < episodes.length; i++)
@@ -52,24 +110,26 @@ Item {
             if (f !== "" && ep.title.toLowerCase().indexOf(f) === -1) continue
             result.push(ep)
         }
+        if (root._reverseOrder) result.reverse()
         return result
     }
 
-    // ── Header bar ────────────────────────────────────────────────────────────
+    // ── Header bar (always visible) ───────────────────────────────────────────
     Rectangle {
         id: pageHeader
         anchors { top: parent.top; left: parent.left; right: parent.right }
         height: 56
         color: Theme.bgSurface
-        z: 1
+        z: 2
 
+        // Back button
         Item {
             anchors { left: parent.left; leftMargin: Theme.spaceXs; verticalCenter: parent.verticalCenter }
             width: 44; height: 44
 
             Text {
                 anchors.centerIn: parent
-                text: ""   // arrow_back
+                text: ""   // arrow_back
                 font.family:    "Material Icons"
                 font.pixelSize: Theme.iconSizeMd
                 color: Theme.textPrimary
@@ -78,10 +138,11 @@ Item {
             MouseArea {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
-                onClicked: root.backClicked()
+                onClicked: AppNavigation.pop()
             }
         }
 
+        // Cast + Share buttons
         Row {
             anchors { right: parent.right; rightMargin: Theme.spaceXs; verticalCenter: parent.verticalCenter }
 
@@ -90,7 +151,7 @@ Item {
 
                 Text {
                     anchors.centerIn: parent
-                    text: ""   // cast
+                    text: ""   // cast
                     font.family:    "Material Icons"
                     font.pixelSize: Theme.iconSizeMd
                     color: Theme.textPrimary
@@ -108,7 +169,7 @@ Item {
 
                 Text {
                     anchors.centerIn: parent
-                    text: ""   // share
+                    text: ""   // share
                     font.family:    "Material Icons"
                     font.pixelSize: Theme.iconSizeMd
                     color: Theme.textPrimary
@@ -129,7 +190,57 @@ Item {
         }
     }
 
-    // ── Scrollable content ────────────────────────────────────────────────────
+    // ── Loading spinner (fills space below header) ────────────────────────────
+    Item {
+        anchors { top: pageHeader.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
+        visible: root._feedLoading && !root._feedReady
+
+        BusyIndicator {
+            anchors.centerIn: parent
+            running: parent.visible
+        }
+    }
+
+    // ── Error state ───────────────────────────────────────────────────────────
+    Item {
+        anchors { top: pageHeader.bottom; left: parent.left; right: parent.right; bottom: parent.bottom }
+        visible: !root._feedLoading && root._feedError !== ""
+
+        Column {
+            anchors.centerIn: parent
+            spacing: Theme.spaceSm
+
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: ""   // error_outline
+                font.family:    "Material Icons"
+                font.pixelSize: Theme.iconSizeXl
+                color: Theme.error
+            }
+
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "Failed to load feed"
+                font.pixelSize: Theme.fontSizeMd
+                font.family:    Theme.fontFamily
+                font.weight:    Theme.fontWeightMedium
+                color: Theme.textSecondary
+            }
+
+            Text {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: root._feedError
+                font.pixelSize: Theme.fontSizeXs
+                font.family:    Theme.fontFamily
+                color: Theme.textDisabled
+                wrapMode: Text.WordWrap
+                width: 260
+                horizontalAlignment: Text.AlignHCenter
+            }
+        }
+    }
+
+    // ── Scrollable content (hidden until feed is ready) ───────────────────────
     Flickable {
         id: scroller
         anchors {
@@ -140,6 +251,7 @@ Item {
         }
         contentHeight: pageCol.implicitHeight
         clip: true
+        visible: root._feedReady
 
         Column {
             id: pageCol
@@ -187,6 +299,7 @@ Item {
                 width: parent.width
                 height: 44
 
+                // Episode count
                 Text {
                     anchors { left: parent.left; leftMargin: Theme.spaceMd; verticalCenter: parent.verticalCenter }
                     text: {
@@ -200,40 +313,70 @@ Item {
                     color: Theme.textSecondary
                 }
 
-                Item {
-                    id: archivedToggle
+                // Right-side controls: sort + archived toggle
+                Row {
                     anchors { right: parent.right; rightMargin: Theme.spaceSm; verticalCenter: parent.verticalCenter }
-                    visible: root.archivedCount > 0
-                    height: 28
-                    width: archivedLabel.implicitWidth + Theme.spaceMd * 2
+                    spacing: Theme.spaceXs
 
-                    Rectangle {
-                        anchors.fill: parent
-                        radius: Theme.radiusFull
-                        color:        root.showArchived ? Theme.accent  : "transparent"
-                        border.color: root.showArchived ? "transparent" : Theme.textDisabled
-                        border.width: 1
+                    // Sort-order toggle
+                    Item {
+                        width: 32; height: 32
 
-                        Behavior on color        { ColorAnimation { duration: Theme.animFast } }
-                        Behavior on border.color { ColorAnimation { duration: Theme.animFast } }
+                        Text {
+                            anchors.centerIn: parent
+                            text: ""   // sort
+                            font.family:    "Material Icons"
+                            font.pixelSize: Theme.iconSizeSm
+                            color: root._reverseOrder ? Theme.accent : Theme.textSecondary
+
+                            Behavior on color { ColorAnimation { duration: Theme.animFast } }
+
+                            rotation: root._reverseOrder ? 180 : 0
+                            Behavior on rotation { NumberAnimation { duration: Theme.animFast } }
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root._reverseOrder = !root._reverseOrder
+                        }
                     }
 
-                    Text {
-                        id: archivedLabel
-                        anchors.centerIn: parent
-                        text: root.showArchived ? "Hide Archived" : "Show Archived"
-                        font.pixelSize: Theme.fontSizeXs
-                        font.weight:    Theme.fontWeightMedium
-                        font.family:    Theme.fontFamily
-                        color: root.showArchived ? Theme.textOnAccent : Theme.textSecondary
+                    // Archived toggle
+                    Item {
+                        id: archivedToggle
+                        visible: root.archivedCount > 0
+                        height: 28
+                        width: visible ? archivedLabel.implicitWidth + Theme.spaceMd * 2 : 0
 
-                        Behavior on color { ColorAnimation { duration: Theme.animFast } }
-                    }
+                        Rectangle {
+                            anchors.fill: parent
+                            radius: Theme.radiusFull
+                            color:        root.showArchived ? Theme.accent  : "transparent"
+                            border.color: root.showArchived ? "transparent" : Theme.textDisabled
+                            border.width: 1
 
-                    MouseArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.showArchived = !root.showArchived
+                            Behavior on color        { ColorAnimation { duration: Theme.animFast } }
+                            Behavior on border.color { ColorAnimation { duration: Theme.animFast } }
+                        }
+
+                        Text {
+                            id: archivedLabel
+                            anchors.centerIn: parent
+                            text: root.showArchived ? "Hide Archived" : "Show Archived"
+                            font.pixelSize: Theme.fontSizeXs
+                            font.weight:    Theme.fontWeightMedium
+                            font.family:    Theme.fontFamily
+                            color: root.showArchived ? Theme.textOnAccent : Theme.textSecondary
+
+                            Behavior on color { ColorAnimation { duration: Theme.animFast } }
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.showArchived = !root.showArchived
+                        }
                     }
                 }
 
@@ -274,7 +417,7 @@ Item {
 
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: ""   // search
+                        text: ""   // search
                         font.family:    "Material Icons"
                         font.pixelSize: Theme.iconSizeXl
                         color: Theme.textDisabled

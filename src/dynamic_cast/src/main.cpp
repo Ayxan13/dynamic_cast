@@ -1,3 +1,6 @@
+#include "dcbackend/feedcontroller.hpp"
+#include "dcbackend/feedparser.hpp"
+#include "dcbackend/feedprovider.hpp"
 #include "dcbackend/networkprovider.hpp"
 #include "dcbackend/searchcontroller.hpp"
 #include "dcbackend/searchprovider.hpp"
@@ -22,9 +25,11 @@ int main(int argc, char* argv[])
 
     std::shared_ptr<dc::INetworkProvider> network = dc::createNetworkProvider();
     dc::SearchController searchController(dc::createSearchProvider(network));
+    dc::FeedController feedController(dc::createFeedProvider(dc::createFeedParser(), network));
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty(u"searchController"_s, &searchController);
+    engine.rootContext()->setContextProperty(u"feedController"_s, &feedController);
 
     QObject::connect(
         &engine,

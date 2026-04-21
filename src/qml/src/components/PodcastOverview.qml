@@ -35,6 +35,8 @@ Item {
         spacing: 0
 
         // ── Artwork ───────────────────────────────────────────────────────────
+        Item { width: 1; height: Theme.spaceLg }
+
         PodcastArtworkCard {
             anchors.horizontalCenter: parent.horizontalCenter
             width:  Theme.artworkSizeXl

@@ -24,6 +24,15 @@ Item {
     property string lastQuery: ""
     property string errorMessage: ""
 
+    function openPodcast(feedUrl, name, artworkUrl, author) {
+        AppNavigation.push("pages/PodcastPage.qml", {
+            feedUrl:      feedUrl,
+            podcastName:  name,
+            artworkSource: artworkUrl !== "" ? Qt.url(artworkUrl) : "",
+            author:       author
+        })
+    }
+
     // ── Debounce timer ────────────────────────────────────────────────────────
     Timer {
         id: debounce
@@ -42,6 +51,7 @@ Item {
                         podcastName: r.podcastName,
                         author:      r.author,
                         artworkUrl:  r.artworkUrl,
+                        rssUrl:      r.rssUrl,
                         subscribed:  false
                     })
                 }
@@ -223,6 +233,7 @@ Item {
                     artworkSource: model.artworkUrl !== "" ? Qt.url(model.artworkUrl) : ""
                     subscribed:  model.subscribed
                     onSubscribeClicked: resultsModel.setProperty(index, "subscribed", !model.subscribed)
+                    onRowClicked: root.openPodcast(model.rssUrl, model.podcastName, model.artworkUrl, model.author)
                 }
 
                 Rectangle {

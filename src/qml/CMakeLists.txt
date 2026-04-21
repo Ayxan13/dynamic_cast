@@ -2,6 +2,7 @@ file(GLOB_RECURSE QML_SRC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS
 file(GLOB_RECURSE FONTS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "assets/*.ttf")
 
 set_source_files_properties(src/Theme.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+set_source_files_properties(src/AppNavigation.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_library(dynamic_cast_qml STATIC)
 qt_add_qml_module(dynamic_cast_qml
