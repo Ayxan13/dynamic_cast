@@ -12,6 +12,8 @@ Item {
         { name: "PodcastResultRow",    source: Qt.resolvedUrl("previews/PodcastResultRowPreview.qml")    },
         { name: "PodcastArtworkCard",  source: Qt.resolvedUrl("previews/PodcastArtworkCardPreview.qml")  },
         { name: "PodcastOverview",     source: Qt.resolvedUrl("previews/PodcastOverviewPreview.qml")     },
+        { name: "EpisodeListItem",     source: Qt.resolvedUrl("previews/EpisodeListItemPreview.qml")     },
+        { name: "PodcastPage",         source: Qt.resolvedUrl("previews/PodcastPagePreview.qml")         },
         { name: "SearchPage",          source: Qt.resolvedUrl("previews/SearchPagePreview.qml")          },
         { name: "SubscriptionsPage",   source: Qt.resolvedUrl("previews/SubscriptionsPagePreview.qml")   }
     ]
