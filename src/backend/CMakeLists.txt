@@ -5,4 +5,6 @@ addComponent(backend Qt6::Core Qt6::Network Qt6::Qml QCoro6::Core QCoro6::Networ
 target_link_libraries(dynamic_cast_backend
     PUBLIC
         dynamic_cast::common
+    PRIVATE
+        Qt6::Xml
 )

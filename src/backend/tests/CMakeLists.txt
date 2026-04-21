@@ -11,3 +11,8 @@ addTest(
     TEST_NAME searchcontroller
     DEPENDENCIES Qt6::Network Qt6::Qml QCoro6::Qml
     NO_MAIN "ON")
+
+
+addTest(
+    COMPONENT_NAME backend
+    TEST_NAME feedparser)
