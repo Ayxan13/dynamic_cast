@@ -1,5 +1,6 @@
 #include "dcbackend/searchcontroller.hpp"
 #include "dcbackend/searchprovider.hpp"
+#include <QCoro/QCoroQml>
 #include <QCoro/QCoroTask>
 #include <QCoro/QCoroTimer>
 
@@ -42,6 +43,7 @@ struct DummySearchProvider final : dc::ISearchProvider {
 int main(int argc, char* argv[])
 {
     QGuiApplication app(argc, argv);
+    QCoro::Qml::registerTypes();
 
     QCommandLineParser parser;
     parser.addHelpOption();

@@ -3,6 +3,7 @@
 #include "dcbackend/searchcontroller.hpp"
 #include "dcbackend/searchprovider.hpp"
 
+#include <QCoro/QCoroQmlTask>
 #include <QCoro/QCoroTask>
 #include <QEventLoop>
 #include <QTimer>
@@ -47,9 +48,18 @@ static PodcastSearchResult makePodcast(qint64 id, const QString& title, const QS
     };
 }
 
+static QList<PodcastResult> awaitResults(QCoro::QmlTask task)
+{
+    auto* listener = task.await();
+    if (!listener->value().isValid()) {
+        pumpEvents();
+    }
+    return listener->value().value<QList<PodcastResult>>();
+}
+
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
-TEST_CASE("SearchController - successful search emits resultsReady with correct data")
+TEST_CASE("SearchController - successful search returns correct data")
 {
     auto provider = std::make_unique<MockSearchProvider>(
         MockSearchProvider::Result { QVector<PodcastSearchResult> {
@@ -59,17 +69,9 @@ TEST_CASE("SearchController - successful search emits resultsReady with correct 
 
     SearchController controller(std::move(provider));
 
-    QList<PodcastResult> captured;
-    bool fired = false;
-    QObject::connect(&controller, &SearchController::resultsReady,
-        [&](QList<PodcastResult> list) { captured = std::move(list); fired = true; });
+    const auto captured = awaitResults(controller.search(u"history"_s));
 
-    controller.search(u"history"_s);
-    if (!fired) pumpEvents();
-
-    CHECK(fired);
     REQUIRE(captured.size() == 2);
-
     CHECK(captured[0].podcastName == u"Crime Junkie"_s);
     CHECK(captured[0].author      == u"audiochuck"_s);
     CHECK(!captured[0].artworkUrl.isEmpty());
@@ -78,22 +80,14 @@ TEST_CASE("SearchController - successful search emits resultsReady with correct 
     CHECK(captured[1].author      == u"Dan Carlin"_s);
 }
 
-TEST_CASE("SearchController - empty results emits resultsReady with empty list")
+TEST_CASE("SearchController - empty results returns empty list")
 {
     auto provider = std::make_unique<MockSearchProvider>(
         MockSearchProvider::Result { QVector<PodcastSearchResult> {} });
 
     SearchController controller(std::move(provider));
 
-    QList<PodcastResult> captured;
-    bool fired = false;
-    QObject::connect(&controller, &SearchController::resultsReady,
-        [&](QList<PodcastResult> list) { captured = std::move(list); fired = true; });
-
-    controller.search(u"xyzzy"_s);
-    if (!fired) pumpEvents();
-
-    CHECK(fired);
+    const auto captured = awaitResults(controller.search(u"xyzzy"_s));
     CHECK(captured.isEmpty());
 }
 
@@ -148,13 +142,8 @@ TEST_CASE("SearchController - loading is true during search and false after")
     QObject::connect(&controller, &SearchController::loadingChanged,
         [&] { loadingHistory.append(controller.loading()); });
 
-    bool done = false;
-    QObject::connect(&controller, &SearchController::resultsReady,
-        [&](QList<PodcastResult>) { done = true; });
-
     CHECK(!controller.loading());
-    controller.search(u"test"_s);
-    if (!done) pumpEvents();
+    awaitResults(controller.search(u"test"_s));
 
     CHECK(!controller.loading());
     REQUIRE(loadingHistory.size() >= 2);

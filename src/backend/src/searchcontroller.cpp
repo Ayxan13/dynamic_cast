@@ -4,30 +4,15 @@
 
 using Qt::StringLiterals::operator""_s;
 
-// Registers a QVariantList converter so QML's for-of loop can iterate a
-// PodcastResultList signal parameter transparently.
-static void registerMetaTypes()
-{
-    QMetaType::registerConverter<QList<dc::PodcastResult>, QVariantList>(
-        [](const QList<dc::PodcastResult>& list) -> QVariantList {
-            QVariantList out;
-            out.reserve(list.size());
-            for (const auto& item : list)
-                out.append(QVariant::fromValue(item));
-            return out;
-        });
-}
-Q_CONSTRUCTOR_FUNCTION(registerMetaTypes)
-
 dc::SearchController::SearchController(std::unique_ptr<ISearchProvider> provider, QObject* parent)
     : QObject(parent)
     , m_provider(std::move(provider))
 {
 }
 
-void dc::SearchController::search(const QString& term)
+QCoro::QmlTask dc::SearchController::search(const QString& term)
 {
-    doSearch(term);
+    return doSearch(term);
 }
 
 void dc::SearchController::setLoading(const bool newValue)
@@ -38,7 +23,7 @@ void dc::SearchController::setLoading(const bool newValue)
     }
 }
 
-QCoro::Task<void> dc::SearchController::doSearch(QString term)
+QCoro::Task<QList<dc::PodcastResult>> dc::SearchController::doSearch(QString term)
 {
     setLoading(true);
     const QScopeGuard resetLoading { [this] { setLoading(false); } };
@@ -56,7 +41,7 @@ QCoro::Task<void> dc::SearchController::doSearch(QString term)
             },
             *err);
         emit searchFailed(msg);
-        co_return;
+        co_return {};
     }
 
     QList<PodcastResult> list;
@@ -68,5 +53,5 @@ QCoro::Task<void> dc::SearchController::doSearch(QString term)
             .artworkUrl = pod.artworkUrl100,
         });
     }
-    emit resultsReady(std::move(list));
+    co_return list;
 }

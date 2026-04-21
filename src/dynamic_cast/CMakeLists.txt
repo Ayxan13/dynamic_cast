@@ -9,7 +9,7 @@ target_link_libraries(dynamic_cast
         dynamic_cast::backend
         dynamic_cast::qml
         dynamic_cast_qmlplugin
-        Qt6::Gui Qt6::Core Qt6::Network Qt6::Qml QCoro6::Core QCoro6::Network
+        Qt6::Gui Qt6::Core Qt6::Network Qt6::Qml QCoro6::Core QCoro6::Network QCoro6::Qml
 )
 
 set_target_properties(dynamic_cast PROPERTIES

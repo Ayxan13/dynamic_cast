@@ -35,24 +35,22 @@ Item {
             root.lastQuery = q
             root.errorMessage = ""
             resultsModel.clear()
-            searchController.search(q)
+            searchController.search(q).then(function(results) {
+                resultsModel.clear()
+                for (const r of results) {
+                    resultsModel.append({
+                        podcastName: r.podcastName,
+                        author:      r.author,
+                        artworkUrl:  r.artworkUrl,
+                        subscribed:  false
+                    })
+                }
+            })
         }
     }
 
     Connections {
         target: searchController
-
-        function onResultsReady(results) {
-            resultsModel.clear()
-            for (const r of results) {
-                resultsModel.append({
-                    podcastName: r.podcastName,
-                    author:      r.author,
-                    artworkUrl:  r.artworkUrl,
-                    subscribed:  false
-                })
-            }
-        }
 
         function onSearchFailed(error) {
             root.errorMessage = error

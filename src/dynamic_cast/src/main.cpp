@@ -2,6 +2,7 @@
 #include "dcbackend/searchcontroller.hpp"
 #include "dcbackend/searchprovider.hpp"
 
+#include <QCoro/QCoroQml>
 #include <QtGui/QFontDatabase>
 #include <QtGui/QGuiApplication>
 #include <QtQml/QQmlApplicationEngine>
@@ -15,6 +16,7 @@ using Qt::StringLiterals::operator""_s;
 int main(int argc, char* argv[])
 {
     QGuiApplication app(argc, argv);
+    QCoro::Qml::registerTypes();
     QFontDatabase::addApplicationFont(
         u":/qt/qml/DynamicCast/assets/fonts/MaterialIcons-Regular.ttf"_s);
 

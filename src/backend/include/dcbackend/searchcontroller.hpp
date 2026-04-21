@@ -1,9 +1,9 @@
 #pragma once
 
 #include "dcbackend/searchprovider.hpp"
+#include <QCoro/QCoroQmlTask>
 #include <QCoro/QCoroTask>
 #include <QObject>
-#include <QVariantList>
 #include <memory>
 
 namespace dc {
@@ -29,16 +29,15 @@ public:
 
     bool loading() const { return m_loading; }
 
-    Q_INVOKABLE void search(const QString& term);
+    Q_INVOKABLE QCoro::QmlTask search(const QString& term);
 
 signals:
     void loadingChanged();
-    void resultsReady(QList<dc::PodcastResult> results);
     void searchFailed(QString error);
 
 private:
     void setLoading(bool newValue);
-    QCoro::Task<void> doSearch(QString term);
+    QCoro::Task<QList<PodcastResult>> doSearch(QString term);
 
     std::unique_ptr<ISearchProvider> m_provider;
     bool m_loading = false;
@@ -47,4 +46,3 @@ private:
 } // namespace dc
 
 Q_DECLARE_METATYPE(dc::PodcastResult)
-Q_DECLARE_METATYPE(QList<dc::PodcastResult>)
