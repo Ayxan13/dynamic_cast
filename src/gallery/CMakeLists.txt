@@ -22,3 +22,7 @@ target_link_libraries(gallery
         Qt6::Gui Qt6::Core Qt6::Qml Qt6::Quick Qt6::QuickControls2
         QCoro6::Core QCoro6::Network QCoro6::Qml
 )
+
+if(DC_BUILD_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/CMakeLists.txt")
+    add_subdirectory(tests)
+endif()

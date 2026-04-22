@@ -1,3 +1,5 @@
+#include "dcbackend/feedcontroller.hpp"
+#include "dcbackend/feedprovider.hpp"
 #include "dcbackend/searchcontroller.hpp"
 #include "dcbackend/searchprovider.hpp"
 #include <QCoro/QCoroQml>
@@ -38,6 +40,13 @@ struct DummySearchProvider final : dc::ISearchProvider {
     }
 };
 
+struct DummyFeedProvider final : dc::IFeedProvider {
+    QCoro::Task<dc::Expected<dc::PodcastFeed, dc::Error>> fetch(const QUrl& /*url*/) const override
+    {
+        co_return dc::Expected<dc::PodcastFeed, dc::Error> { dc::PodcastFeed {} };
+    }
+};
+
 } // namespace
 
 int main(int argc, char* argv[])
@@ -63,9 +72,11 @@ int main(int argc, char* argv[])
         u":/qt/qml/DynamicCast/assets/fonts/MaterialIcons-Regular.ttf"_s);
 
     dc::SearchController searchController(std::make_unique<DummySearchProvider>());
+    dc::FeedController feedController(std::make_unique<DummyFeedProvider>());
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty(u"searchController"_s, &searchController);
+    engine.rootContext()->setContextProperty(u"feedController"_s, &feedController);
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreationFailed,

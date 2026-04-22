@@ -21,3 +21,9 @@ addTest(
     COMPONENT_NAME backend
     TEST_NAME feedprovider
     NO_MAIN "ON")
+
+addTest(
+    COMPONENT_NAME backend
+    TEST_NAME feedcontroller
+    DEPENDENCIES Qt6::Qml QCoro6::Qml
+    NO_MAIN "ON")
