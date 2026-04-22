@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 import DynamicCast
 
 Item {
@@ -10,6 +11,7 @@ Item {
     property int    durationMinutes: -1    // -1 = unknown
     property real   progress:        0.0   // 0.0 – 1.0
     property bool   playing:         false
+    property bool   buffering:       false
     property bool   archived:        false
 
     signal playPauseClicked()
@@ -107,6 +109,18 @@ Item {
                 color: root.playing ? Theme.accent : Theme.textPrimary
 
                 Behavior on color { ColorAnimation { duration: Theme.animFast } }
+            }
+
+            Loader {
+                anchors.centerIn: parent
+                width: 28
+                height: 28
+                active: root.buffering
+                sourceComponent: BusyIndicator {
+                    anchors.fill: parent
+                    running: true
+                    padding: 0
+                }
             }
 
             MouseArea {

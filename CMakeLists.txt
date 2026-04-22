@@ -51,7 +51,7 @@ FetchContent_MakeAvailable(QCoro)
 qcoro_enable_coroutines()
 
 
-# add_subdirectory(src/core)
+add_subdirectory(src/core)
 add_subdirectory(src/common)
 add_subdirectory(src/backend)
 add_subdirectory(src/qml)

@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 import DynamicCast
 
 Rectangle {
@@ -9,6 +10,7 @@ Rectangle {
     property url artworkSource
     property real position: 0.0   // 0.0 – 1.0
     property bool playing: false
+    property bool buffering: false
 
     signal playPauseClicked()
     signal skipForwardClicked()
@@ -70,7 +72,7 @@ Rectangle {
         // Placeholder icon
         Text {
             anchors.centerIn: parent
-            text: "\ue3a1"   // music_note
+            text: ""   // music_note
             font.family: "Material Icons"
             font.pixelSize: Theme.iconSizeMd
             color: Theme.textDisabled
@@ -125,10 +127,22 @@ Rectangle {
 
             Text {
                 anchors.centerIn: parent
-                text: root.playing ? "\ue034" : "\ue037"   // pause / play_arrow
+                text: root.playing ? "" : ""   // pause / play_arrow
                 font.family: "Material Icons"
                 font.pixelSize: Theme.iconSizeLg
                 color: Theme.textPrimary
+            }
+
+            Loader {
+                anchors.centerIn: parent
+                width: Theme.iconSizeLg
+                height: Theme.iconSizeLg
+                active: root.buffering
+                sourceComponent: BusyIndicator {
+                    anchors.fill: parent
+                    running: true
+                    padding: 0
+                }
             }
 
             MouseArea {
@@ -145,7 +159,7 @@ Rectangle {
 
             Text {
                 anchors.centerIn: parent
-                text: "\ue01f"   // fast_forward
+                text: ""   // fast_forward
                 font.family: "Material Icons"
                 font.pixelSize: Theme.iconSizeMd
                 color: Theme.textPrimary

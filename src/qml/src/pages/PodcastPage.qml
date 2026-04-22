@@ -75,8 +75,8 @@ Rectangle {
                     title:           ep.title,
                     releaseDate:     ep.pubDate,
                     durationMinutes: root.parseDurationMinutes(ep.duration),
+                    audioUrl:        ep.audioUrl,
                     progress:        0,
-                    playing:         false,
                     archived:        false
                 })
             }
@@ -397,10 +397,21 @@ Rectangle {
                     releaseDate:     modelData.releaseDate     ?? ""
                     episodeTitle:    modelData.title           ?? ""
                     durationMinutes: modelData.durationMinutes ?? -1
-                    progress:        modelData.progress        ?? 0.0
-                    playing:         modelData.playing         ?? false
                     archived:        modelData.archived        ?? false
-                    onPlayPauseClicked: root.episodePlayPauseClicked(index)
+                    playing: audioPlayer.playing && audioPlayer.episodeUrl === (modelData.audioUrl ?? "")
+                    buffering: audioPlayer.buffering && audioPlayer.episodeUrl === (modelData.audioUrl ?? "")
+                    progress: audioPlayer.episodeUrl === (modelData.audioUrl ?? "")
+                              ? audioPlayer.position
+                              : (modelData.progress ?? 0.0)
+                    onPlayPauseClicked: {
+                        var ep = root.filteredEpisodes[index]
+                        if (!ep) return
+                        if (audioPlayer.episodeUrl === ep.audioUrl && audioPlayer.playing)
+                            audioPlayer.togglePlayPause()
+                        else
+                            audioPlayer.playEpisode(ep.audioUrl ?? "", ep.title ?? "",
+                                                    root.podcastName, root.artworkSource)
+                    }
                 }
             }
 

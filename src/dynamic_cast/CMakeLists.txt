@@ -6,6 +6,7 @@ qt_import_qml_plugins(dynamic_cast)
 target_link_libraries(dynamic_cast
     PRIVATE
         dynamic_cast::common
+        dynamic_cast::core
         dynamic_cast::backend
         dynamic_cast::qml
         dynamic_cast_qmlplugin

@@ -21,7 +21,7 @@ Item {
             top: parent.top
             left: parent.left
             right: parent.right
-            bottom: /*miniPlayer.visible ? miniPlayer.top : */navBar.top
+            bottom: miniPlayer.visible ? miniPlayer.top : navBar.top
         }
 
         initialItem: "pages/HomePage.qml"
@@ -52,6 +52,24 @@ Item {
         function replaceRoot(pageUrl) {
             stack.replace(null, Qt.resolvedUrl(pageUrl))
         }
+    }
+
+    MiniPlayer {
+        id: miniPlayer
+        anchors {
+            left: parent.left
+            right: parent.right
+            bottom: navBar.top
+        }
+        visible: audioPlayer.hasMedia
+        title: audioPlayer.title
+        podcastName: audioPlayer.podcastName
+        artworkSource: audioPlayer.artworkUrl
+        position: audioPlayer.position
+        playing: audioPlayer.playing
+        buffering: audioPlayer.buffering
+        onPlayPauseClicked: audioPlayer.togglePlayPause()
+        onSkipForwardClicked: audioPlayer.skipForward(30)
     }
 
     BottomNavBar {
